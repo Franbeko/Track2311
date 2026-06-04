@@ -1,0 +1,17 @@
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+# Disallow admin pages
+Disallow: /dashboard
+Disallow: /login
+Disallow: /register
+
+# Sitemap location
+Sitemap: https://track2311investments.org/sitemap.xml
+
+# Crawl delay for better server performance
+Crawl-delay: 1
+
+# Specify host
+Host: https://track2311investments.org

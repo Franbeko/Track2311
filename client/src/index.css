@@ -1,0 +1,439 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gray-50;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-gradient-to-r from-primary to-secondary text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105;
+  }
+  
+  .input-field {
+    @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all;
+  }
+  
+  .card {
+    @apply bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden;
+  }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Main Slider Styles - No dark background, just gold arrows */
+.swiper-button-next,
+.swiper-button-prev {
+  color: #ffd700 !important;
+  background: transparent !important;
+  width: 35px !important;
+  height: 35px !important;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  color: #ffed4a !important;
+  transform: scale(1.1);
+  background: transparent !important;
+}
+
+.swiper-button-next:after,
+.swiper-button-prev:after {
+  font-size: 14px !important;
+  font-weight: bold;
+}
+
+.swiper-pagination-bullet {
+  background: white !important;
+  opacity: 0.7 !important;
+}
+
+.swiper-pagination-bullet-active {
+  background: #ffd700 !important;
+  opacity: 1 !important;
+  transform: scale(1.2);
+}
+
+/* Testimonial Slider Styles */
+.testimonial-slider {
+  padding-bottom: 50px;
+}
+
+.testimonial-slider .swiper-button-next,
+.testimonial-slider .swiper-button-prev {
+  color: #ffd700 !important;
+  background: transparent !important;
+  width: 35px !important;
+  height: 35px !important;
+  border-radius: 50%;
+}
+
+.testimonial-slider .swiper-button-next:after,
+.testimonial-slider .swiper-button-prev:after {
+  font-size: 14px !important;
+}
+
+.testimonial-slider .swiper-pagination-bullet {
+  background: white !important;
+}
+
+.testimonial-slider .swiper-pagination-bullet-active {
+  background: #ffd700 !important;
+}
+
+/* Slide up animation for modal */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s ease-out;
+}
+
+/* Mobile Slider Height Adjustment */
+@media (max-width: 768px) {
+  .swiper {
+    height: 50vh !important;
+  }
+  
+  .swiper-slide > div {
+    height: 50vh !important;
+  }
+  
+  .swiper-slide h1 {
+    font-size: 1.5rem !important;
+  }
+  
+  .swiper-slide p {
+    font-size: 0.875rem !important;
+  }
+  
+  .swiper-slide .btn-primary,
+  .swiper-slide a {
+    padding: 8px 16px !important;
+    font-size: 0.875rem !important;
+  }
+  
+  /* Floating buttons on mobile */
+  .fixed.bottom-6.right-6 {
+    bottom: 16px !important;
+    right: 16px !important;
+  }
+  
+  .fixed.bottom-6.right-6 button,
+  .fixed.bottom-6.right-6 a {
+    width: 36px !important;
+    height: 36px !important;
+  }
+  
+  .fixed.bottom-6.right-6 svg {
+    width: 16px !important;
+    height: 16px !important;
+  }
+  
+  /* Chat modal on mobile */
+  .fixed.bottom-20.right-6 {
+    width: calc(100% - 32px) !important;
+    right: 16px !important;
+    left: 16px !important;
+    bottom: 70px !important;
+  }
+  
+  /* Smaller arrows on mobile */
+  .swiper-button-next,
+  .swiper-button-prev {
+    width: 28px !important;
+    height: 28px !important;
+  }
+  
+  .swiper-button-next:after,
+  .swiper-button-prev:after {
+    font-size: 12px !important;
+  }
+}
+
+/* Tablet adjustments */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .swiper-slide h1 {
+    font-size: 2.5rem !important;
+  }
+  
+  .swiper-slide p {
+    font-size: 1rem !important;
+  }
+}
+
+/* Floating buttons hover effects */
+.fixed.bottom-6.right-6 button,
+.fixed.bottom-6.right-6 a {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.fixed.bottom-6.right-6 button:hover,
+.fixed.bottom-6.right-6 a:hover {
+  transform: scale(1.1);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+}
+
+/* WhatsApp modal custom scrollbar */
+.fixed.bottom-20.right-6 .overflow-y-auto {
+  scrollbar-width: thin;
+}
+
+.fixed.bottom-20.right-6 .overflow-y-auto::-webkit-scrollbar {
+  width: 4px;
+}
+
+.fixed.bottom-20.right-6 .overflow-y-auto::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.fixed.bottom-20.right-6 .overflow-y-auto::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+/* Navbar hover effects */
+nav a {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+nav a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -2px;
+  left: 0;
+  background-color: #F9A825;
+  transition: width 0.3s ease;
+}
+
+nav a:hover::after {
+  width: 100%;
+}
+
+/* Mobile menu animation */
+.animate-slide-up {
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Reviews Slider Styles */
+.reviews-slider {
+  padding-bottom: 60px;
+}
+
+.reviews-slider .swiper-button-next,
+.reviews-slider .swiper-button-prev {
+  color: #F9A825 !important;
+  background: transparent !important;
+  width: 35px !important;
+  height: 35px !important;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.reviews-slider .swiper-button-next:hover,
+.reviews-slider .swiper-button-prev:hover {
+  color: #ffed4a !important;
+  transform: scale(1.1);
+  background: transparent !important;
+}
+
+.reviews-slider .swiper-button-next:after,
+.reviews-slider .swiper-button-prev:after {
+  font-size: 14px !important;
+  font-weight: bold;
+}
+
+.reviews-slider .swiper-pagination-bullet {
+  background: #1B5E20 !important;
+  opacity: 0.5 !important;
+}
+
+.reviews-slider .swiper-pagination-bullet-active {
+  background: #F9A825 !important;
+  opacity: 1 !important;
+  transform: scale(1.2);
+}
+
+/* For mobile devices */
+@media (max-width: 768px) {
+  .reviews-slider .swiper-button-next,
+  .reviews-slider .swiper-button-prev {
+    width: 28px !important;
+    height: 28px !important;
+  }
+  
+  .reviews-slider .swiper-button-next:after,
+  .reviews-slider .swiper-button-prev:after {
+    font-size: 12px !important;
+  }
+}
+
+/* ============================================ */
+/* MARQUEE ANIMATIONS FOR DOUBLE REVIEWS SLIDER */
+/* ============================================ */
+
+@keyframes marquee-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marquee-right {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.animate-marquee-left {
+  animation: marquee-left 30s linear infinite;
+  width: max-content;
+}
+
+.animate-marquee-right {
+  animation: marquee-right 30s linear infinite;
+  width: max-content;
+}
+
+.animate-marquee-left:hover,
+.animate-marquee-right:hover {
+  animation-play-state: paused;
+}
+
+/* For mobile devices - slower animation */
+@media (max-width: 768px) {
+  .animate-marquee-left {
+    animation-duration: 40s;
+  }
+  .animate-marquee-right {
+    animation-duration: 40s;
+  }
+}
+
+/* Line clamp for text truncation */
+.line-clamp-4 {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Fade In Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Live Chat Animations */
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+.animate-bounce {
+  animation: bounce 1s infinite;
+}
+
+/* Chat input auto-resize */
+textarea {
+  resize: none;
+  overflow-y: auto;
+}
+
+/* Custom scrollbar for chat */
+.overflow-y-auto::-webkit-scrollbar {
+  width: 4px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 10px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Optimize animations for better performance */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Lazy loading image optimization */
+img {
+  content-visibility: auto;
+}
+
+/* Optimize font rendering */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Prevent layout shifts */
+picture, img, svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
