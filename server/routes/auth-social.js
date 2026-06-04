@@ -11,11 +11,11 @@ const generateToken = (userId) => {
   return jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: '30d' });
 };
 
-// Google Strategy
+// Google Strategy - Production URLs
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: 'http://localhost:5000/api/auth/google/callback'
+    callbackURL: `${process.env.FRONTEND_URL || 'https://track2311investments.org'}/api/auth/google/callback`
   },
   async (accessToken, refreshToken, profile, done) => {
     try {
@@ -61,7 +61,7 @@ router.get('/google',
 );
 
 router.get('/google/callback',
-  passport.authenticate('google', { session: false, failureRedirect: 'http://localhost:5173/?error=google_auth_failed' }),
+  passport.authenticate('google', { session: false, failureRedirect: `${process.env.FRONTEND_URL || 'https://track2311investments.org'}?error=google_auth_failed` }),
   (req, res) => {
     console.log('Google callback successful for user:', req.user.email);
     
@@ -75,7 +75,7 @@ router.get('/google/callback',
     console.log('Redirecting to frontend with token');
     
     // Redirect to frontend with token
-    res.redirect(`http://localhost:5173/auth-success?token=${token}&user=${encodeURIComponent(JSON.stringify(user))}`);
+    res.redirect(`${process.env.FRONTEND_URL || 'https://track2311investments.org'}/auth-success?token=${token}&user=${encodeURIComponent(JSON.stringify(user))}`);
   }
 );
 

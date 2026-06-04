@@ -49,6 +49,9 @@ router.post('/register', async (req, res) => {
     await user.save();
     console.log('User created successfully:', user._id);
     
+    // Get frontend URL from environment
+    const frontendUrl = process.env.FRONTEND_URL || 'https://track2311investments.org';
+    
     // Send Welcome Email
     const welcomeMailOptions = {
       from: `"Track2311 Investments" <${process.env.EMAIL_USER}>`,
@@ -99,7 +102,7 @@ router.post('/register', async (req, res) => {
               </ul>
               
               <div style="text-align: center;">
-                <a href="${process.env.FRONTEND_URL || 'http://localhost:5173'}/dashboard" class="button">Go to Dashboard</a>
+                <a href="${frontendUrl}/account" class="button">Go to My Account</a>
               </div>
               
               <p>If you have any questions, our support team is here to help:</p>
@@ -129,7 +132,7 @@ Next Steps:
 3. Start earning returns
 4. Track your portfolio in real-time
 
-Visit your dashboard: ${process.env.FRONTEND_URL || 'http://localhost:5173'}/dashboard
+Visit your account: ${frontendUrl}/account
 
 Need help? Contact us:
 Email: ${process.env.EMAIL_USER}

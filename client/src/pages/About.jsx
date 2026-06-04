@@ -12,7 +12,7 @@ import SEO from '../components/SEO';
 const About = () => {
   const { t } = useLanguage();
 
-  // Company values - Updated for agriculture focus
+  // Company values
   const values = [
     { 
       icon: <FaSeedling className="text-4xl" />, 
@@ -36,7 +36,7 @@ const About = () => {
     },
   ];
 
-  // Core business areas - Emphasizing Agriculture
+  // Core business areas
   const businessAreas = [
     { icon: <FaTree className="text-3xl" />, titleKey: "agriculture", descriptionKey: "agricultureDesc" },
     { icon: <FaBuilding className="text-3xl" />, titleKey: "realEstate", descriptionKey: "realEstateDesc" },
@@ -153,7 +153,7 @@ const About = () => {
       />
       
       <div>
-        {/* Hero Section - Updated for Agriculture */}
+        {/* Hero Section */}
         <section className="bg-gradient-to-r from-primary to-secondary text-white py-20">
           <div className="container mx-auto px-4 text-center">
             <motion.div
@@ -174,7 +174,7 @@ const About = () => {
           </div>
         </section>
 
-        {/* Who We Are Section - Updated for Agriculture */}
+        {/* Who We Are Section */}
         <section className="py-20 bg-white">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">

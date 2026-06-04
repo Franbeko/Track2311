@@ -33,8 +33,8 @@ router.post('/request', async (req, res) => {
     user.resetPasswordExpires = resetTokenExpiry;
     await user.save();
     
-    // Get frontend URL from environment or use default
-    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+    // Get frontend URL from environment or use production URL
+    const frontendUrl = process.env.FRONTEND_URL || 'https://track2311investments.org';
     const resetUrl = `${frontendUrl}/reset-password/${resetToken}`;
     
     // Send email using Resend
@@ -103,7 +103,6 @@ router.post('/request', async (req, res) => {
       
     } catch (emailError) {
       console.error('Email sending failed:', emailError);
-      // Don't fail the request if email fails, but log it
     }
     
     res.status(200).json({ 
@@ -201,7 +200,7 @@ router.post('/reset', async (req, res) => {
                 <p>Your Track2311 account password has been successfully changed.</p>
                 <p>If you did not make this change, please contact our support team immediately.</p>
                 <div style="text-align: center; margin: 30px 0;">
-                  <a href="${process.env.FRONTEND_URL || 'http://localhost:5173'}" style="background: #1B5E20; color: white; padding: 10px 25px; text-decoration: none; border-radius: 5px;">Login to Your Account</a>
+                  <a href="${process.env.FRONTEND_URL || 'https://track2311investments.org'}" style="background: #1B5E20; color: white; padding: 10px 25px; text-decoration: none; border-radius: 5px;">Login to Your Account</a>
                 </div>
                 <hr>
                 <p style="font-size: 12px; color: #666;">This is a security notification. No further action is required.</p>

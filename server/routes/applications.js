@@ -8,13 +8,14 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 // Submit job application
 router.post('/', async (req, res) => {
   try {
-    const { fullName, email, phone, education, coverLetter, linkedin, portfolio, jobTitle, jobLocation } = req.body;
+    const { fullName, email, phone, location, education, coverLetter, linkedin, portfolio, jobTitle, jobLocation } = req.body;
     
     // Save to database
     const application = new Application({
       fullName,
       email,
       phone,
+      location,
       education,
       coverLetter,
       linkedin,
@@ -75,6 +76,11 @@ router.post('/', async (req, res) => {
               <div class="field">
                 <div class="label">Phone:</div>
                 <div class="value">${phone || 'Not provided'}</div>
+              </div>
+              
+              <div class="field">
+                <div class="label">Location:</div>
+                <div class="value">${location || 'Not provided'}</div>
               </div>
               
               <div class="field">
@@ -164,7 +170,7 @@ router.post('/', async (req, res) => {
               
               <p><strong>📞 In the meantime:</strong></p>
               <ul>
-                <li>Visit our <a href="http://localhost:5173/team" style="color: #1B5E20;">Team page</a> to learn more about our agricultural experts</li>
+                <li>Visit our <a href="https://track2311investments.org/team" style="color: #1B5E20;">Team page</a> to learn more about our agricultural experts</li>
                 <li>Follow us on social media for company updates</li>
                 <li>Reply to this email if you have any questions</li>
               </ul>
