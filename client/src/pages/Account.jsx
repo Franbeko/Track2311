@@ -55,7 +55,7 @@ const Account = () => {
   const loadMessages = async () => {
     if (!messagesLoaded && user?.email) {
       try {
-        const response = await axios.get('http://localhost:5000/api/contact/user', {
+        const response = await axios.get('/api/contact/user', {
           params: { email: user.email }
         });
         setUserMessages(response.data.slice(0, 5));
@@ -75,7 +75,7 @@ const Account = () => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const response = await axios.put('http://localhost:5000/api/auth/update-profile', {
+      const response = await axios.put('/api/auth/update-profile', {
         name,
         phone,
         country,
@@ -113,7 +113,7 @@ const Account = () => {
     
     setIsLoading(true);
     try {
-      const response = await axios.put('http://localhost:5000/api/auth/change-password', {
+      const response = await axios.put('/api/auth/change-password', {
         currentPassword,
         newPassword
       }, {

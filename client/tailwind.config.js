@@ -7,9 +7,9 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: '#1B5E20', // Deep Green
-        secondary: '#B71C1C', // Deep Red
-        accent: '#F9A825', // Gold
+        primary: '#1B5E20',
+        secondary: '#B71C1C',
+        accent: '#F9A825',
         'gold-light': '#FDD835',
         'green-light': '#4CAF50',
         'red-light': '#EF5350',

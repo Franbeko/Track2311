@@ -14,7 +14,7 @@ const SEO = ({
   const siteTitle = 'Track2311 Investments';
   const fullTitle = title ? `${title} | ${siteTitle}` : siteTitle;
   const siteDescription = description || 'Track2311 Investments offers secure agricultural investments, real estate opportunities, and business consultancy in Liberia. Earn up to 50% ROI with our proven investment plans.';
-  const siteUrl = url || `https://track2311investments.com${window.location.pathname}`;
+  const siteUrl = url || `https://track2311investments.org${window.location.pathname}`;
   const siteImage = image || '/images/og-image.jpg';
   
   return (
@@ -63,7 +63,7 @@ const SEO = ({
               "@type": "ListItem",
               "position": 1,
               "name": "Home",
-              "item": "https://track2311investments.com/"
+              "item": "https://track2311investments.org/"
             },
             ...(title ? [{
               "@type": "ListItem",

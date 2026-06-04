@@ -241,7 +241,7 @@ const LiveChat = () => {
 
   const sendToBackend = async (name, email, message) => {
     try {
-      await axios.post('http://localhost:5000/api/chat', {
+      await axios.post('/api/chat', {
         name,
         email,
         message,

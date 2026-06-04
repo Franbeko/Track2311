@@ -165,7 +165,7 @@ const BlogNews = () => {
     return t.blogNews?.authorBios?.[key] || bios[key];
   };
 
-  // Categories - Updated for Agriculture
+  // Categories
   const categories = [
     { name: "All", key: "all", count: blogPosts.length, icon: "🌾" },
     { name: "Agriculture News", key: "agricultureNews", count: 1, icon: "🌱" },
@@ -193,7 +193,7 @@ const BlogNews = () => {
     post.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
-  // Comments data - Updated for Agriculture
+  // Comments data
   const [comments, setComments] = useState([
     {
       id: 1,
@@ -257,7 +257,7 @@ const BlogNews = () => {
       />
       
       <div>
-        {/* Hero Section - Updated for Agriculture */}
+        {/* Hero Section */}
         <section className="relative bg-gradient-to-r from-primary to-secondary text-white py-24 overflow-hidden">
           <div className="absolute inset-0 bg-black/20"></div>
           <div className="container mx-auto px-4 relative z-10 text-center">
@@ -316,7 +316,7 @@ const BlogNews = () => {
                   </div>
                 </div>
 
-                {/* Featured Post Banner - Updated for Agriculture */}
+                {/* Featured Post Banner */}
                 {searchedPosts.length > 0 && !searchTerm && selectedCategory === 'All' && (
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
@@ -438,7 +438,7 @@ const BlogNews = () => {
                 )}
               </div>
 
-              {/* Sidebar - Updated for Agriculture */}
+              {/* Sidebar */}
               <div className="space-y-8">
                 {/* Author/About Card */}
                 <div className="bg-white rounded-2xl p-6 shadow-md text-center">
@@ -486,7 +486,7 @@ const BlogNews = () => {
                   </div>
                 </div>
 
-                {/* Categories - Updated for Agriculture */}
+                {/* Categories */}
                 <div className="bg-white rounded-2xl p-6 shadow-md">
                   <h3 className="text-xl font-bold text-primary mb-4 flex items-center gap-2">
                     <FaTag className="text-accent" /> Agricultural Categories
@@ -510,7 +510,7 @@ const BlogNews = () => {
                   </div>
                 </div>
 
-                {/* Popular Tags - Updated for Agriculture */}
+                {/* Popular Tags */}
                 <div className="bg-white rounded-2xl p-6 shadow-md">
                   <h3 className="text-xl font-bold text-primary mb-4 flex items-center gap-2">
                     <FaTag className="text-accent" /> Popular Agricultural Tags
@@ -528,7 +528,7 @@ const BlogNews = () => {
                   </div>
                 </div>
 
-                {/* Newsletter - Updated for Agriculture */}
+                {/* Newsletter */}
                 <div className="bg-gradient-to-r from-primary to-secondary rounded-2xl p-6 text-white">
                   <div className="text-3xl mb-3">🌱</div>
                   <h3 className="text-xl font-bold mb-2">Farmer's Newsletter</h3>
@@ -663,7 +663,7 @@ const BlogNews = () => {
           </div>
         )}
 
-        {/* CTA Section - Updated for Agriculture */}
+        {/* CTA Section */}
         <section className="py-16 bg-gradient-to-r from-primary via-secondary to-primary text-white">
           <div className="container mx-auto px-4 text-center">
             <div className="text-6xl mb-4">🌾</div>

@@ -23,7 +23,7 @@ const Careers = () => {
     fullName: '',
     email: '',
     phone: '',
-    location: '', // ADDED location field
+    location: '',
     education: '',
     coverLetter: '',
     linkedin: '',
@@ -308,7 +308,8 @@ const Careers = () => {
     };
     
     try {
-      const response = await axios.post('http://localhost:5000/api/applications', applicationData);
+      // UPDATED: Removed localhost:5000 for production
+      const response = await axios.post('/api/applications', applicationData);
       
       if (response.data.success) {
         toast.success('Application submitted successfully! Check your email for confirmation.');

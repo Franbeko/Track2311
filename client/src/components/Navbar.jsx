@@ -187,7 +187,7 @@ const Navbar = () => {
                 )}
               </div>
 
-              {/* Auth Buttons - Updated: Dashboard changed to My Account */}
+              {/* Auth Buttons */}
               {user ? (
                 <>
                   <Link to="/account" className="text-gray-700 hover:text-primary font-medium transition-colors">
@@ -287,7 +287,7 @@ const Navbar = () => {
                 </div>
               </div>
               
-              {/* Mobile Auth Buttons - Updated: Dashboard changed to My Account */}
+              {/* Mobile Auth Buttons */}
               {user ? (
                 <>
                   <Link to="/account" className="block text-gray-700 hover:text-primary py-2" onClick={() => setIsOpen(false)}>

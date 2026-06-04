@@ -265,7 +265,7 @@ const BlogInvestmentTips = () => {
       />
       
       <div>
-        {/* Hero Section - Updated for Agricultural Investment */}
+        {/* Hero Section */}
         <section className="relative bg-gradient-to-r from-primary to-secondary text-white py-24 overflow-hidden">
           <div className="absolute inset-0 bg-black/20"></div>
           <div className="absolute top-20 right-10 opacity-10">
@@ -291,7 +291,7 @@ const BlogInvestmentTips = () => {
           </div>
         </section>
 
-        {/* Quick Tips Cards - Agricultural Focus */}
+        {/* Quick Tips Cards */}
         <section className="py-16 bg-white">
           <div className="container mx-auto px-4">
             <motion.div
@@ -331,7 +331,7 @@ const BlogInvestmentTips = () => {
           </div>
         </section>
 
-        {/* ROI Calculator Section - NEW */}
+        {/* ROI Calculator Section */}
         <section className="py-16 bg-gradient-to-r from-primary/5 to-secondary/5">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -551,7 +551,7 @@ const BlogInvestmentTips = () => {
                 )}
               </div>
 
-              {/* Sidebar - Different from Latest News */}
+              {/* Sidebar */}
               <div className="space-y-8">
                 {/* Expert Advice Section */}
                 <div className="bg-gradient-to-r from-primary to-secondary rounded-2xl p-6 text-white">
@@ -568,7 +568,7 @@ const BlogInvestmentTips = () => {
                   </div>
                 </div>
 
-                {/* Resource Library - NEW Section */}
+                {/* Resource Library */}
                 <div className="bg-white rounded-2xl p-6 shadow-md">
                   <h3 className="text-xl font-bold text-primary mb-4 flex items-center gap-2">
                     <FaBookOpen className="text-accent" /> Free Resource Library

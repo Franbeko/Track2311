@@ -295,7 +295,7 @@ const BlogMarketUpdates = () => {
       />
       
       <div>
-        {/* Hero Section - Updated for Agriculture */}
+        {/* Hero Section */}
         <section className="relative bg-gradient-to-r from-primary to-secondary text-white py-24 overflow-hidden">
           <div className="absolute inset-0 bg-black/20"></div>
           <div className="absolute top-20 right-10 opacity-10">

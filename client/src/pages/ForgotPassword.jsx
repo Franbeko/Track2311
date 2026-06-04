@@ -22,7 +22,7 @@ const ForgotPassword = () => {
     setIsLoading(true);
     
     try {
-      const response = await axios.post('http://localhost:5000/api/password-reset/request', { email });
+      const response = await axios.post('/api/password-reset/request', { email });
       toast.success(response.data.message);
       setIsSubmitted(true);
     } catch (error) {

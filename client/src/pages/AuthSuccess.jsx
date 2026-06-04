@@ -7,7 +7,7 @@ const AuthSuccess = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { socialLogin } = useAuth();
-  const hasProcessed = useRef(false); // Prevent double processing
+  const hasProcessed = useRef(false);
 
   useEffect(() => {
     // Prevent multiple executions

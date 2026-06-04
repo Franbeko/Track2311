@@ -46,7 +46,7 @@ const About = () => {
     { icon: <FaHardHat className="text-3xl" />, titleKey: "construction", descriptionKey: "constructionDesc" },
   ];
 
-  // Milestones - Updated with agriculture focus
+  // Milestones
   const milestones = [
     { year: "2019", titleKey: "founded", descriptionKey: "foundedDesc" },
     { year: "2020", titleKey: "firstInvestment", descriptionKey: "firstInvestmentDesc" },
@@ -55,7 +55,7 @@ const About = () => {
     { year: "2024", titleKey: "globalRecognition", descriptionKey: "globalRecognitionDesc" },
   ];
 
-  // Why choose us points - Updated for agriculture focus
+  // Why choose us points
   const whyChooseUsPoints = [
     "localExpertise",
     "provenTrackRecord",
@@ -236,7 +236,7 @@ const About = () => {
           </div>
         </section>
 
-        {/* Mission & Vision Section - Updated for Agriculture */}
+        {/* Mission & Vision Section */}
         <section className="py-20 bg-gray-50">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -277,7 +277,7 @@ const About = () => {
           </div>
         </section>
 
-        {/* Core Values Section - Updated for Agriculture */}
+        {/* Core Values Section */}
         <section className="py-20 bg-white">
           <div className="container mx-auto px-4">
             <motion.div
@@ -317,7 +317,7 @@ const About = () => {
           </div>
         </section>
 
-        {/* Our Business Areas Section - Updated for Agriculture */}
+        {/* Our Business Areas Section */}
         <section className="py-20 bg-gradient-to-r from-primary to-secondary text-white">
           <div className="container mx-auto px-4">
             <motion.div
@@ -357,7 +357,7 @@ const About = () => {
           </div>
         </section>
 
-        {/* Company Milestones Timeline - Updated for Agriculture */}
+        {/* Company Milestones Timeline */}
         <section className="py-20 bg-gray-50">
           <div className="container mx-auto px-4">
             <motion.div
@@ -406,7 +406,7 @@ const About = () => {
           </div>
         </section>
 
-        {/* Why Choose Us Section - Updated for Agriculture */}
+        {/* Why Choose Us Section */}
         <section className="py-20 bg-white">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -457,7 +457,7 @@ const About = () => {
           </div>
         </section>
 
-        {/* CTA Section - Updated for Agriculture */}
+        {/* CTA Section */}
         <section className="py-20 bg-gradient-to-r from-primary via-secondary to-primary text-white">
           <div className="container mx-auto px-4 text-center">
             <motion.div

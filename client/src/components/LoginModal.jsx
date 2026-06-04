@@ -78,7 +78,7 @@ const LoginModal = ({ isOpen, onClose, initialMode = 'login', allowedPaths = ['/
 
   // Google login handler
   const handleGoogleLogin = () => {
-    window.location.href = 'http://localhost:5000/api/auth/google';
+    window.location.href = '/api/auth/google';
   };
 
   const handleLogin = async (e) => {
