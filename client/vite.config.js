@@ -24,12 +24,25 @@ export default defineConfig({
     },
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom', 'react-router-dom'],
-          icons: ['react-icons'],
-          animations: ['framer-motion'],
-          charts: ['recharts', 'chart.js'],
-          swiper: ['swiper'],
+        manualChunks: (id) => {
+          if (id.includes('node_modules')) {
+            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom')) {
+              return 'vendor'
+            }
+            if (id.includes('react-icons')) {
+              return 'icons'
+            }
+            if (id.includes('framer-motion')) {
+              return 'animations'
+            }
+            if (id.includes('recharts') || id.includes('chart.js')) {
+              return 'charts'
+            }
+            if (id.includes('swiper')) {
+              return 'swiper'
+            }
+            return 'vendor'
+          }
         },
       },
     },
