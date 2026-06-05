@@ -815,9 +815,6 @@ const BlogInvestmentTips = () => {
               <Link to="/contact" className="bg-accent text-primary px-8 py-3 rounded-lg font-semibold hover:shadow-lg transition inline-block transform hover:scale-105">
                 Talk to an Agri-Expert
               </Link>
-              <Link to="/plans" className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary transition inline-block">
-                Explore Farm Investment Plans
-              </Link>
             </div>
           </div>
         </section>

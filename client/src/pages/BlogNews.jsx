@@ -677,9 +677,6 @@ const BlogNews = () => {
               <Link to="/contact" className="bg-accent text-primary px-8 py-3 rounded-lg font-semibold hover:shadow-lg transition inline-block transform hover:scale-105">
                 Contact Our Agri-Team
               </Link>
-              <Link to="/register" className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary transition inline-block">
-                Start Farming Investment
-              </Link>
             </div>
           </div>
         </section>
