@@ -457,3 +457,41 @@ picture, img, svg {
   max-width: 100%;
   height: auto;
 }
+
+/* ============================================ */
+/* REMOVE HORIZONTAL SPACING ON MOBILE DEVICES */
+/* ============================================ */
+
+/* Prevent horizontal scroll and remove side spaces on mobile */
+@media (max-width: 768px) {
+  /* Make sure the body and html take full width */
+  html, body {
+    width: 100%;
+    overflow-x: hidden;
+    position: relative;
+  }
+  
+  /* Remove padding from main containers */
+  .container {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  
+  /* Ensure all sections take full width */
+  section {
+    width: 100%;
+    overflow-x: hidden;
+  }
+  
+  /* Remove any default margins that cause spacing */
+  * {
+    max-width: 100%;
+  }
+  
+  /* Fix for the chat modal on mobile */
+  .fixed.bottom-24.right-6 {
+    width: calc(100% - 32px) !important;
+    left: 16px !important;
+    right: 16px !important;
+  }
+}
