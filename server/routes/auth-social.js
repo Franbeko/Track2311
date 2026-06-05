@@ -11,11 +11,11 @@ const generateToken = (userId) => {
   return jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: '30d' });
 };
 
-// Google Strategy - Production URLs
+// Google Strategy
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: `${process.env.FRONTEND_URL || 'https://track2311investments.org'}/api/auth/google/callback`
+    callbackURL: `${process.env.API_URL || 'https://api.track2311investments.org'}/api/auth/google/callback`
   },
   async (accessToken, refreshToken, profile, done) => {
     try {
@@ -24,23 +24,20 @@ passport.use(new GoogleStrategy({
       let user = await User.findOne({ email: profile.emails[0].value });
       
       if (!user) {
-        // Create new user
+        // Create new user - no password needed for social login
         user = await User.create({
           name: profile.displayName,
           email: profile.emails[0].value,
           googleId: profile.id,
-          isSocialLogin: true,
-          password: null
+          isSocialLogin: true
         });
-        console.log('New user created:', user.email);
+        console.log('New user created via Google:', user.email);
       } else {
         // Update googleId if not present
         if (!user.googleId) {
           user.googleId = profile.id;
           await user.save();
           console.log('Existing user updated with googleId:', user.email);
-        } else {
-          console.log('Existing user found:', user.email);
         }
       }
       
@@ -61,7 +58,7 @@ router.get('/google',
 );
 
 router.get('/google/callback',
-  passport.authenticate('google', { session: false, failureRedirect: `${process.env.FRONTEND_URL || 'https://track2311investments.org'}?error=google_auth_failed` }),
+  passport.authenticate('google', { session: false, failureRedirect: 'https://track2311investments.org/?error=google_auth_failed' }),
   (req, res) => {
     console.log('Google callback successful for user:', req.user.email);
     
@@ -72,10 +69,8 @@ router.get('/google/callback',
       email: req.user.email
     };
     
-    console.log('Redirecting to frontend with token');
-    
-    // Redirect to frontend with token
-    res.redirect(`${process.env.FRONTEND_URL || 'https://track2311investments.org'}/auth-success?token=${token}&user=${encodeURIComponent(JSON.stringify(user))}`);
+    // Redirect to frontend auth-success page
+    res.redirect(`https://track2311investments.org/auth-success?token=${token}&user=${encodeURIComponent(JSON.stringify(user))}`);
   }
 );
 

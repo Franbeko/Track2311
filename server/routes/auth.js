@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const nodemailer = require('nodemailer');
 
@@ -19,6 +18,8 @@ router.post('/register', async (req, res) => {
   try {
     const { name, email, password, phone } = req.body;
     
+    console.log('Registration attempt for:', email);
+    
     // Basic validation
     if (!name || !email || !password) {
       return res.status(400).json({ message: 'Please provide name, email and password' });
@@ -34,118 +35,16 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ message: 'User already exists' });
     }
     
-    // Hash password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-    
-    // Create new user
+    // Create new user - the pre-save hook will hash the password automatically
     const user = new User({
       name,
       email,
-      password: hashedPassword,
+      password,  // Don't hash here - the pre-save hook will handle it
       phone
     });
     
     await user.save();
     console.log('User created successfully:', user._id);
-    
-    // Get frontend URL from environment
-    const frontendUrl = process.env.FRONTEND_URL || 'https://track2311investments.org';
-    
-    // Send Welcome Email
-    const welcomeMailOptions = {
-      from: `"Track2311 Investments" <${process.env.EMAIL_USER}>`,
-      to: user.email,
-      subject: '🎉 Welcome to Track2311 Investments!',
-      html: `
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Welcome to Track2311</title>
-          <style>
-            body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; }
-            .container { max-width: 600px; margin: 0 auto; background: #f5f5f5; border-radius: 10px; overflow: hidden; }
-            .header { background: linear-gradient(135deg, #1B5E20 0%, #B71C1C 100%); padding: 30px 20px; text-align: center; }
-            .header h1 { color: #F9A825; margin: 0; font-size: 28px; }
-            .header p { color: #fff; margin: 10px 0 0; opacity: 0.9; }
-            .content { background: white; padding: 30px; }
-            .button { display: inline-block; background: #1B5E20; color: white !important; padding: 12px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 20px 0; }
-            .footer { background: #f0f0f0; padding: 20px; text-align: center; font-size: 12px; color: #666; }
-            .info-box { background: #f5f5f5; padding: 15px; border-radius: 5px; margin: 15px 0; }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <div class="header">
-              <h1>Track2311 Investments</h1>
-              <p>Building wealth through smart investments</p>
-            </div>
-            <div class="content">
-              <h2 style="color: #1B5E20;">Welcome ${name}! 🎉</h2>
-              <p>Thank you for joining Track2311 Investments. We're excited to have you on board!</p>
-              
-              <div class="info-box">
-                <h3 style="color: #1B5E20; margin-top: 0;">Your Account Details:</h3>
-                <p><strong>Name:</strong> ${name}</p>
-                <p><strong>Email:</strong> ${email}</p>
-                <p><strong>Account Created:</strong> ${new Date().toLocaleDateString()}</p>
-              </div>
-              
-              <h3>🚀 Next Steps:</h3>
-              <ul>
-                <li>📊 Explore our investment plans</li>
-                <li>💰 Make your first deposit</li>
-                <li>📈 Start earning returns</li>
-                <li>🎯 Track your portfolio in real-time</li>
-              </ul>
-              
-              <div style="text-align: center;">
-                <a href="${frontendUrl}/account" class="button">Go to My Account</a>
-              </div>
-              
-              <p>If you have any questions, our support team is here to help:</p>
-              <p>📧 ${process.env.EMAIL_USER}<br>📞 +1 (901) 608-0131</p>
-            </div>
-            <div class="footer">
-              <p>&copy; ${new Date().getFullYear()} Track2311 Investment and Consultancy. All rights reserved.</p>
-              <p>Monrovia, Liberia | +1 (901) 608-0131</p>
-            </div>
-          </div>
-        </body>
-        </html>
-      `,
-      text: `
-Welcome to Track2311 Investments, ${name}!
-
-Thank you for joining us. Your account has been successfully created.
-
-Account Details:
-- Name: ${name}
-- Email: ${email}
-- Account Created: ${new Date().toLocaleDateString()}
-
-Next Steps:
-1. Explore our investment plans
-2. Make your first deposit
-3. Start earning returns
-4. Track your portfolio in real-time
-
-Visit your account: ${frontendUrl}/account
-
-Need help? Contact us:
-Email: ${process.env.EMAIL_USER}
-Phone: +1 (901) 608-0131
-
----
-Track2311 Investment and Consultancy
-Building wealth through smart investments
-      `
-    };
-    
-    await transporter.sendMail(welcomeMailOptions);
-    console.log(`✅ Welcome email sent to: ${user.email}`);
     
     // Create token
     const token = jwt.sign(
@@ -153,6 +52,20 @@ Building wealth through smart investments
       process.env.JWT_SECRET,
       { expiresIn: '7d' }
     );
+    
+    // Send welcome email (optional, can remove if causing issues)
+    try {
+      const frontendUrl = process.env.FRONTEND_URL || 'https://track2311investments.org';
+      await transporter.sendMail({
+        from: `"Track2311 Investments" <${process.env.EMAIL_USER}>`,
+        to: user.email,
+        subject: '🎉 Welcome to Track2311 Investments!',
+        html: `<h2>Welcome ${name}!</h2><p>Thank you for joining Track2311 Investments.</p>`
+      });
+      console.log(`Welcome email sent to: ${user.email}`);
+    } catch (emailError) {
+      console.log('Email skipped:', emailError.message);
+    }
     
     res.status(201).json({
       success: true,
@@ -176,17 +89,30 @@ router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
     
+    console.log('Login attempt for:', email);
+    
     if (!email || !password) {
       return res.status(400).json({ message: 'Please provide email and password' });
     }
     
     const user = await User.findOne({ email });
     if (!user) {
+      console.log('User not found:', email);
       return res.status(401).json({ message: 'Invalid credentials' });
     }
     
-    const isMatch = await bcrypt.compare(password, user.password);
+    // Check if user has a password (not social login)
+    if (!user.password) {
+      console.log('User has no password (social login)');
+      return res.status(401).json({ message: 'Please sign in with Google' });
+    }
+    
+    // Use the model's comparePassword method
+    const isMatch = await user.comparePassword(password);
+    console.log('Password match result:', isMatch);
+    
     if (!isMatch) {
+      console.log('Password mismatch for:', email);
       return res.status(401).json({ message: 'Invalid credentials' });
     }
     
@@ -195,6 +121,8 @@ router.post('/login', async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: '7d' }
     );
+    
+    console.log('Login successful for:', email);
     
     res.json({
       success: true,
