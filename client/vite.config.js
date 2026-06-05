@@ -4,7 +4,7 @@ import compression from 'vite-plugin-compression'
 import { ViteImageOptimizer } from 'vite-plugin-image-optimizer'
 
 export default defineConfig({
-  base: '/',  // <-- ADD THIS LINE - critical for correct asset paths
+  base: '/',
   plugins: [
     react(),
     compression({
