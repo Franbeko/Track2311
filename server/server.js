@@ -15,7 +15,7 @@ const frontendUrl = process.env.FRONTEND_URL || 'https://track2311investments.or
 
 // Middleware - Allow both production and development origins
 app.use(cors({
-  origin: [frontendUrl, 'http://localhost:5173', 'http://localhost:3000'],
+  origin: [frontendUrl, 'https://www.track2311investments.org', 'http://localhost:5173', 'http://localhost:3000'],
   credentials: true
 }));
 app.use(express.json());
@@ -35,14 +35,20 @@ app.get('/api/test', (req, res) => {
   res.json({ message: 'API is working!' });
 });
 
-// Serve static files from the React frontend in production
-const path = require('path');
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../client/dist')));
-  app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, '../client/dist', 'index.html'));
+// Health check route - useful for monitoring
+app.get('/api/health', (req, res) => {
+  const mongoose = require('mongoose');
+  res.json({
+    status: 'ok',
+    database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
+    databaseName: mongoose.connection.name || 'unknown',
+    timestamp: new Date().toISOString()
   });
-}
+});
+
+// --- IMPORTANT: Remove the old static file serving code ---
+// The code that was here previously has been removed because
+// the frontend is now hosted on Vercel, not on this server.
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -54,7 +60,7 @@ app.use((err, req, res, next) => {
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📝 API URL: http://localhost:${PORT}/api/test`);
   console.log(`🌐 Frontend URL: ${frontendUrl}`);
