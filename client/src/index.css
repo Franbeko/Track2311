@@ -357,13 +357,13 @@ nav a:hover::after {
   animation-play-state: paused;
 }
 
-/* For mobile devices - slower animation */
+/* For mobile devices - keep original speed (30s) */
 @media (max-width: 768px) {
   .animate-marquee-left {
-    animation-duration: 40s;
+    animation-duration: 30s;
   }
   .animate-marquee-right {
-    animation-duration: 40s;
+    animation-duration: 30s;
   }
 }
 
@@ -497,7 +497,7 @@ picture, img, svg {
 }
 
 /* ============================================ */
-/* MOBILE SLIDER ARROWS HIDE, REVIEWS SPEED, LOGO CENTER */
+/* MOBILE SLIDER ARROWS HIDE ONLY */
 /* ============================================ */
 
 /* Hide navigation arrows on mobile - they hide text */
@@ -505,30 +505,5 @@ picture, img, svg {
   .swiper-button-next,
   .swiper-button-prev {
     display: none !important;
-  }
-}
-
-/* Speed up client reviews movement on mobile */
-@media (max-width: 768px) {
-  .animate-marquee-left {
-    animation-duration: 15s !important;
-  }
-  .animate-marquee-right {
-    animation-duration: 15s !important;
-  }
-}
-
-/* Center the company logo on mobile */
-@media (max-width: 768px) {
-  nav .flex.items-center.space-x-3 {
-    margin-left: auto !important;
-    margin-right: auto !important;
-    justify-content: center !important;
-  }
-  
-  /* Adjust logo size on mobile if needed */
-  nav .w-12.h-12 {
-    width: 40px !important;
-    height: 40px !important;
   }
 }
