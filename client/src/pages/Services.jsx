@@ -370,9 +370,6 @@ const Services = () => {
                 <Link to="/contact" className="bg-primary text-white px-8 py-3 rounded-lg font-semibold hover:bg-secondary transition-all inline-block transform hover:scale-105">
                   {t.servicesPage?.buttons?.contactUs || "Contact Our Agricultural Team"}
                 </Link>
-                <Link to="/plans" className="border-2 border-primary text-primary px-8 py-3 rounded-lg font-semibold hover:bg-primary hover:text-white transition-all inline-block">
-                  {t.servicesPage?.buttons?.viewPlans || "Explore Farm Investment Plans"}
-                </Link>
               </div>
             </motion.div>
           </div>
