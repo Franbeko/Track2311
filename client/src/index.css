@@ -27,6 +27,26 @@ html {
   scroll-behavior: smooth;
 }
 
+/* ============================================ */
+/* HIDE SCROLLBAR COMPLETELY - ALL DEVICES */
+/* ============================================ */
+
+/* Hide scrollbar for Chrome, Safari, Opera */
+html::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+html {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* Keep scrolling functionality */
+body {
+  overflow-y: auto;
+}
+
 /* Main Slider Styles - No dark background, just gold arrows */
 .swiper-button-next,
 .swiper-button-prev {

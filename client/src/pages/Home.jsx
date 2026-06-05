@@ -88,7 +88,7 @@ const Home = () => {
         }
     ];
 
-    // Team Members
+    // Team Members - 4 members total (Ernest added back)
     const teamMembers = [
         {
             name: "Michael Bobby Bull",
@@ -371,7 +371,7 @@ const Home = () => {
                     </div>
                 </section>
 
-                {/* Investment Plans Preview - UPDATED */}
+                {/* Investment Plans Preview */}
                 <section className="py-20 bg-gradient-to-r from-primary to-secondary text-white">
                     <div className="container mx-auto px-4">
                         <motion.div
@@ -450,7 +450,7 @@ const Home = () => {
                     </div>
                 </section>
 
-                {/* Team Preview Section */}
+                {/* Team Preview Section - RESPONSIVE: 3 on mobile/tablet, 4 on monitor (xl screens) */}
                 <section className="py-20 bg-gray-50">
                     <div className="container mx-auto px-4">
                         <motion.div
@@ -470,7 +470,8 @@ const Home = () => {
                             </p>
                         </motion.div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                        {/* Responsive grid: 1 on mobile, 2 on tablet, 3 on laptop, 4 on monitor/xl screens */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                             {teamMembers.map((member, index) => (
                                 <motion.div
                                     key={index}
