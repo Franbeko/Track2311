@@ -7,12 +7,14 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "serve": "node server.js"
   },
   "dependencies": {
     "@formspree/react": "^3.0.0",
     "axios": "^1.16.1",
     "chart.js": "^4.5.1",
+    "express": "^4.18.2",
     "framer-motion": "^12.40.0",
     "nodemailer": "^8.0.10",
     "react": "^19.2.6",
