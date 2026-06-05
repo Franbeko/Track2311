@@ -1,0 +1,21 @@
+{
+  "name": "Track2311 Investments",
+  "short_name": "Track2311",
+  "description": "Smart Agricultural & Investment Solutions in Liberia",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#1B5E20",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "/images/logo/logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/logo/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

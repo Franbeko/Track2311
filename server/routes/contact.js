@@ -4,12 +4,12 @@ const Contact = require('../models/Contact');
 const { body, validationResult } = require('express-validator');
 const nodemailer = require('nodemailer');
 
-// Configure Gmail SMTP transporter
+// Configure email transporter using either GMAIL or EMAIL config
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_APP_PASSWORD
+    user: process.env.EMAIL_USER || process.env.GMAIL_USER,
+    pass: process.env.EMAIL_PASS || process.env.GMAIL_APP_PASSWORD
   }
 });
 
@@ -36,11 +36,12 @@ router.post('/', [
     });
     await contact.save();
     
-    // Send email to company using Gmail SMTP
+    const fromEmail = process.env.EMAIL_USER || process.env.GMAIL_USER;
     const companyEmail = process.env.COMPANY_EMAIL || 'track2311.investments@gmail.com';
     
+    // Send email to company
     await transporter.sendMail({
-      from: `"Track2311 Website" <${process.env.GMAIL_USER}>`,
+      from: `"Track2311 Website" <${fromEmail}>`,
       to: companyEmail,
       replyTo: email,
       subject: `🌾 New Contact Form Submission from ${name}`,
@@ -106,7 +107,7 @@ router.post('/', [
     
     // Send auto-reply to the user
     await transporter.sendMail({
-      from: `"Track2311 Team" <${process.env.GMAIL_USER}>`,
+      from: `"Track2311 Team" <${fromEmail}>`,
       to: email,
       subject: 'Thank you for contacting Track2311',
       html: `
