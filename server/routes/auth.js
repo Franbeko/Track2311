@@ -16,7 +16,13 @@ const transporter = nodemailer.createTransport({
 // REGISTER - POST /api/auth/register
 router.post('/register', async (req, res) => {
   try {
-    const { name, email, password, phone } = req.body;
+    let { name, email, password, phone } = req.body;
+    
+    // Trim whitespace
+    name = name?.trim();
+    email = email?.trim().toLowerCase();
+    password = password?.trim();
+    phone = phone?.trim();
     
     console.log('Registration attempt for:', email);
     
@@ -39,7 +45,7 @@ router.post('/register', async (req, res) => {
     const user = new User({
       name,
       email,
-      password,  // Don't hash here - the pre-save hook will handle it
+      password,
       phone
     });
     
@@ -53,14 +59,43 @@ router.post('/register', async (req, res) => {
       { expiresIn: '7d' }
     );
     
-    // Send welcome email (optional, can remove if causing issues)
+    // Send welcome email (optional)
     try {
       const frontendUrl = process.env.FRONTEND_URL || 'https://track2311investments.org';
       await transporter.sendMail({
         from: `"Track2311 Investments" <${process.env.EMAIL_USER}>`,
         to: user.email,
         subject: '🎉 Welcome to Track2311 Investments!',
-        html: `<h2>Welcome ${name}!</h2><p>Thank you for joining Track2311 Investments.</p>`
+        html: `
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <meta charset="UTF-8">
+            <title>Welcome to Track2311</title>
+            <style>
+              body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+              .container { max-width: 500px; margin: 0 auto; padding: 20px; }
+              .header { background: #1B5E20; color: white; padding: 20px; text-align: center; }
+              .content { background: #f9f9f9; padding: 20px; }
+              .button { display: inline-block; background: #1B5E20; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <div class="header">
+                <h2>Welcome ${name}!</h2>
+              </div>
+              <div class="content">
+                <p>Thank you for joining Track2311 Investments.</p>
+                <p>We're excited to have you on board!</p>
+                <div style="text-align: center;">
+                  <a href="${frontendUrl}/account" class="button">Go to Dashboard</a>
+                </div>
+              </div>
+            </div>
+          </body>
+          </html>
+        `
       });
       console.log(`Welcome email sent to: ${user.email}`);
     } catch (emailError) {
@@ -87,9 +122,14 @@ router.post('/register', async (req, res) => {
 // LOGIN - POST /api/auth/login
 router.post('/login', async (req, res) => {
   try {
-    const { email, password } = req.body;
+    let { email, password } = req.body;
+    
+    // Trim whitespace from email and password
+    email = email?.trim().toLowerCase();
+    password = password?.trim();
     
     console.log('Login attempt for:', email);
+    console.log('Password length:', password?.length);
     
     if (!email || !password) {
       return res.status(400).json({ message: 'Please provide email and password' });
