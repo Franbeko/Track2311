@@ -9,7 +9,7 @@ import {
 import { useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import SEO from '../components/SEO';
-import axios from 'axios';
+import apiClient from '../utils/axiosConfig';
 import toast from 'react-hot-toast';
 
 const Careers = () => {
@@ -308,8 +308,7 @@ const Careers = () => {
     };
     
     try {
-      // UPDATED: Removed localhost:5000 for production
-      const response = await axios.post('/api/applications', applicationData);
+      const response = await apiClient.post('/api/applications', applicationData);
       
       if (response.data.success) {
         toast.success('Application submitted successfully! Check your email for confirmation.');

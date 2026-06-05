@@ -5,9 +5,10 @@ import { useLanguage } from '../context/LanguageContext';
 import { 
   FaBars, FaTimes, FaPhone, FaEnvelope, FaMapMarkerAlt,
   FaFacebook, FaTwitter, FaInstagram, FaChevronDown,
-  FaGlobe
+  FaGlobe, FaGoogle
 } from 'react-icons/fa';
 import LoginModal from './LoginModal';
+import apiClient from '../utils/axiosConfig';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
@@ -41,6 +42,16 @@ const Navbar = () => {
   const openLoginModal = () => {
     setLoginModalMode('login');
     setIsLoginModalOpen(true);
+  };
+
+  const openRegisterModal = () => {
+    setLoginModalMode('register');
+    setIsLoginModalOpen(true);
+  };
+
+  // Google login handler
+  const handleGoogleLogin = () => {
+    window.location.href = `${apiClient.defaults.baseURL}/api/auth/google`;
   };
 
   return (
@@ -198,9 +209,27 @@ const Navbar = () => {
                   </button>
                 </>
               ) : (
-                <button onClick={openLoginModal} className="bg-primary text-white px-5 py-2 rounded-lg hover:bg-secondary transition-all font-medium shadow-md hover:shadow-lg">
-                  {t.nav?.login || 'Login'}
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={handleGoogleLogin}
+                    className="flex items-center gap-2 text-gray-700 hover:text-primary transition-colors px-3 py-2 rounded-lg border border-gray-200 hover:border-primary"
+                  >
+                    <FaGoogle className="text-red-500" />
+                    <span className="text-sm">Google</span>
+                  </button>
+                  <button 
+                    onClick={openLoginModal} 
+                    className="bg-primary text-white px-5 py-2 rounded-lg hover:bg-secondary transition-all font-medium shadow-md hover:shadow-lg"
+                  >
+                    {t.nav?.login || 'Login'}
+                  </button>
+                  <button 
+                    onClick={openRegisterModal} 
+                    className="border-2 border-primary text-primary px-5 py-2 rounded-lg hover:bg-primary hover:text-white transition-all font-medium"
+                  >
+                    {t.nav?.register || 'Register'}
+                  </button>
+                </div>
               )}
             </div>
 
@@ -298,9 +327,25 @@ const Navbar = () => {
                   </button>
                 </>
               ) : (
-                <div className="pt-4">
-                  <button onClick={() => { openLoginModal(); setIsOpen(false); }} className="block w-full text-center bg-primary text-white px-4 py-2 rounded-lg">
+                <div className="space-y-2 pt-4">
+                  <button
+                    onClick={() => { handleGoogleLogin(); setIsOpen(false); }}
+                    className="flex items-center justify-center gap-2 w-full border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:border-primary transition"
+                  >
+                    <FaGoogle className="text-red-500" />
+                    Sign in with Google
+                  </button>
+                  <button 
+                    onClick={() => { openLoginModal(); setIsOpen(false); }} 
+                    className="block w-full text-center bg-primary text-white px-4 py-2 rounded-lg"
+                  >
                     {t.nav?.login || 'Login'}
+                  </button>
+                  <button 
+                    onClick={() => { openRegisterModal(); setIsOpen(false); }} 
+                    className="block w-full text-center border-2 border-primary text-primary px-4 py-2 rounded-lg hover:bg-primary hover:text-white transition"
+                  >
+                    {t.nav?.register || 'Register'}
                   </button>
                 </div>
               )}

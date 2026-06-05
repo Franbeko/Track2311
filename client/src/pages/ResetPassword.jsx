@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FaLock, FaEye, FaEyeSlash, FaArrowLeft, FaCheckCircle, FaShieldAlt } from 'react-icons/fa';
-import axios from 'axios';
+import apiClient from '../utils/axiosConfig';
 import toast from 'react-hot-toast';
 import SEO from '../components/SEO';
 
@@ -22,7 +22,7 @@ const ResetPassword = () => {
   useEffect(() => {
     const verifyToken = async () => {
       try {
-        const response = await axios.get(`/api/password-reset/verify/${token}`);
+        const response = await apiClient.get(`/api/password-reset/verify/${token}`);
         if (response.status === 200) {
           setIsTokenValid(true);
         }
@@ -53,7 +53,7 @@ const ResetPassword = () => {
     setIsLoading(true);
     
     try {
-      const response = await axios.post('/api/password-reset/reset', {
+      const response = await apiClient.post('/api/password-reset/reset', {
         token,
         password,
         confirmPassword

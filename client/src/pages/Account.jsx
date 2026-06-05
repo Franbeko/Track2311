@@ -10,7 +10,7 @@ import {
   FaUsers, FaHandshake, FaSeedling, FaKey
 } from 'react-icons/fa';
 import { useAuth } from '../context/useAuth';
-import axios from 'axios';
+import apiClient from '../utils/axiosConfig';
 import toast from 'react-hot-toast';
 import SEO from '../components/SEO';
 
@@ -55,7 +55,7 @@ const Account = () => {
   const loadMessages = async () => {
     if (!messagesLoaded && user?.email) {
       try {
-        const response = await axios.get('/api/contact/user', {
+        const response = await apiClient.get('/api/contact/user', {
           params: { email: user.email }
         });
         setUserMessages(response.data.slice(0, 5));
@@ -75,7 +75,7 @@ const Account = () => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const response = await axios.put('/api/auth/update-profile', {
+      const response = await apiClient.put('/api/auth/update-profile', {
         name,
         phone,
         country,
@@ -113,7 +113,7 @@ const Account = () => {
     
     setIsLoading(true);
     try {
-      const response = await axios.put('/api/auth/change-password', {
+      const response = await apiClient.put('/api/auth/change-password', {
         currentPassword,
         newPassword
       }, {

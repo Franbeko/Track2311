@@ -8,6 +8,7 @@ import {
   FaExclamationTriangle, FaTimesCircle
 } from 'react-icons/fa';
 import { useAuth } from '../context/useAuth';
+import apiClient from '../utils/axiosConfig';
 import toast from 'react-hot-toast';
 
 const LoginModal = ({ isOpen, onClose, initialMode = 'login', allowedPaths = ['/'] }) => {
@@ -78,7 +79,7 @@ const LoginModal = ({ isOpen, onClose, initialMode = 'login', allowedPaths = ['/
 
   // Google login handler
   const handleGoogleLogin = () => {
-    window.location.href = '/api/auth/google';
+    window.location.href = `${apiClient.defaults.baseURL}/api/auth/google`;
   };
 
   const handleLogin = async (e) => {

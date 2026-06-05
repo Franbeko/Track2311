@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { FaEnvelope, FaArrowLeft, FaCheckCircle, FaShieldAlt, FaHeadset, FaChartLine } from 'react-icons/fa';
-import axios from 'axios';
+import apiClient from '../utils/axiosConfig';
 import toast from 'react-hot-toast';
 import SEO from '../components/SEO';
 
@@ -22,7 +22,7 @@ const ForgotPassword = () => {
     setIsLoading(true);
     
     try {
-      const response = await axios.post('/api/password-reset/request', { email });
+      const response = await apiClient.post('/api/password-reset/request', { email });
       toast.success(response.data.message);
       setIsSubmitted(true);
     } catch (error) {
