@@ -63,6 +63,7 @@ const LoginModal = ({ isOpen, onClose, initialMode = 'login', allowedPaths = ['/
     setShowPassword(false);
     setShowConfirmPassword(false);
     setRememberMe(false);
+    setMode('login');
   };
 
   // Handle modal close
@@ -98,6 +99,7 @@ const LoginModal = ({ isOpen, onClose, initialMode = 'login', allowedPaths = ['/
     }
   };
 
+  // UPDATED: Register function - switches to login tab instead of auto-login
   const handleRegister = async (e) => {
     e.preventDefault();
     
@@ -114,9 +116,28 @@ const LoginModal = ({ isOpen, onClose, initialMode = 'login', allowedPaths = ['/
     setIsLoading(true);
     const success = await register(regName, regEmail, regPassword, regPhone);
     setIsLoading(false);
+    
     if (success) {
-      handleModalClose();
-      navigate('/');
+      // Reset registration form
+      setRegName('');
+      setRegEmail('');
+      setRegPhone('');
+      setRegPassword('');
+      setRegConfirmPassword('');
+      
+      // Show success message
+      toast.success('Account created successfully! Please login.');
+      
+      // Switch to login tab
+      setMode('login');
+      
+      // Pre-fill email field for convenience
+      setLoginEmail(regEmail);
+      
+      // Clear password field
+      setLoginPassword('');
+      
+      // Don't close modal - let user login
     }
   };
 
