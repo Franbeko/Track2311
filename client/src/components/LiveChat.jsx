@@ -45,15 +45,78 @@ const LiveChat = () => {
     }
   }, [shouldOpenChat, resetChatTrigger]);
 
-  // AI Responses function (keep your existing getAIResponse)
+  // Comprehensive AI Response System
   const getAIResponse = (message) => {
     const msg = message.toLowerCase().trim();
     
+    // ============ GREETINGS ============
     if (msg === 'hi' || msg === 'hello' || msg === 'hey' || msg === 'hi there' || msg === 'hello there') {
-      return "👋 Hello! Welcome to Track2311! I'm your AI assistant. How can I help you today?";
+      return "👋 Hello! Welcome to Track2311! I'm your AI assistant. How can I help you today? Feel free to ask me about our agricultural services, investment opportunities, registration, company info, location, or anything else about Track2311!";
     }
-    // Add all your other responses here
-    return "🌾 I can help with questions about Track2311! Ask me about registration, investments, services, or our team.";
+    
+    if (msg === 'good morning') {
+      return "☀️ Good morning! Hope you're having a wonderful start to your day. How can I help you with Track2311 today?";
+    }
+    
+    if (msg === 'good afternoon') {
+      return "🌤️ Good afternoon! Great to have you here. What can I help you with?";
+    }
+    
+    if (msg === 'good evening') {
+      return "🌙 Good evening! Thanks for stopping by. How can I assist you today?";
+    }
+    
+    if (msg === 'how are you' || msg === 'how are you?' || msg === 'how r u') {
+      return "😊 I'm doing great, thank you for asking! I'm here and ready to help you with any questions about Track2311. How can I assist you today?";
+    }
+    
+    // ============ COMPANY INFORMATION ============
+    if (msg.includes('what is the company about') || msg.includes('what is track2311') || msg.includes('about the company') || msg.includes('tell me about the company')) {
+      return "🌾 **About Track2311**\n\nTrack2311 is a Liberian-based agricultural investment firm founded in 2020.\n\n**What We Do:**\n• Modern farming and crop production (cocoa, rice, cassava, rubber, palm oil)\n• Farmland acquisition and development\n• Agricultural export to global markets\n• Farmer training and capacity building\n• Agribusiness consulting\n\n**Our Mission:** To transform Liberia's agriculture by empowering farmers with modern techniques and global market access.\n\n**Our Vision:** To become West Africa's leading agricultural investment firm.\n\nIs there anything specific you'd like to know?";
+    }
+    
+    // ============ LOCATION ============
+    if (msg.includes('location') || msg.includes('where are you') || msg.includes('address') || msg.includes('headquarters')) {
+      return "📍 **Track2311 Headquarters:**\n\nAdj. St. Philip's Lutheran Church\nDuport Road\nMonrovia, Liberia\n1100\n\n**Farming Regions We Serve:**\n• Lofa County - Rice and cassava\n• Bong County - Rubber and palm oil\n• Nimba County - Cocoa and coffee\n\nOur agricultural experts are available for on-site farm visits across these regions!";
+    }
+    
+    // ============ CONTACT ============
+    if (msg.includes('contact') || msg.includes('email') || msg.includes('phone') || msg.includes('reach us')) {
+      return "📞 **Contact Track2311:**\n\n**Email:** track2311.investments@gmail.com\n\n**Phone:**\n📞 +1 (901) 608-0131 - International line\n📱 +231 88 651 1666 - Liberia mobile\n\n**Hours:** Mon-Fri 8AM-4PM (Liberia time), Sat 9AM-1PM\n\n💬 I'm available 24/7! How can I help?";
+    }
+    
+    // ============ HOW TO JOIN / CAREERS ============
+    if (msg.includes('join the company') || msg.includes('work for') || msg.includes('career') || msg.includes('job')) {
+      return "💼 **Join Our Team!**\n\nTo apply for a position at Track2311:\n\n1️⃣ Visit our **Careers page** (click 'Careers' in the menu)\n2️⃣ Browse our current openings\n3️⃣ Click 'Apply Now' on any position\n4️⃣ Fill out the application form with your details and resume\n\n**Our hiring process:**\n• Submit application\n• Initial screening (phone call)\n• Technical interview\n• Offer & onboarding\n\nWe review applications within 5-7 business days. Good luck! 🍀";
+    }
+    
+    // ============ INVESTMENTS ============
+    if (msg.includes('invest') || msg.includes('investment') || msg.includes('roi') || msg.includes('returns')) {
+      return "📈 **Investment Plans at Track2311:**\n\n🌾 **Farm Starter** - 10% ROI (30 days)\n🚜 **Agri-Growth** - 20% ROI (60 days) - Most Popular\n🌍 **Export Premium** - 35% ROI (90 days)\n\n**How to invest:**\n1️⃣ Register for an account (free)\n2️⃣ Login to your dashboard\n3️⃣ Choose your investment plan\n4️⃣ Make your deposit\n5️⃣ Start earning returns!\n\nWould you like me to help you get started?";
+    }
+    
+    // ============ REGISTRATION ============
+    if (msg.includes('register') || msg.includes('sign up') || msg.includes('create account')) {
+      return "📝 **How to Register on Track2311:**\n\n1️⃣ Click the 'Login' button at the top right\n2️⃣ Switch to the 'Register' tab\n3️⃣ Fill in your information:\n   • Full Name\n   • Email Address\n   • Phone Number (optional)\n   • Password (minimum 6 characters)\n4️⃣ Click 'Create Account'\n\n✅ Registration is **FREE** and takes less than 3 minutes!\n\nWould you like me to guide you through the process?";
+    }
+    
+    // ============ SERVICES ============
+    if (msg.includes('services') || msg.includes('what do you do') || msg.includes('offer')) {
+      return "📋 **Track2311 Services:**\n\n🌾 **Agriculture** - Modern farming and crop production\n💰 **Investment Advisory** - Expert guidance for wealth growth\n🏗️ **General Construction** - Quality construction services\n📚 **Education & Marketing** - Training programs\n💼 **Business Consulting** - Strategic business development\n📊 **Research & Data Analysis** - Data-driven insights\n\nWant to learn more about any specific service? Just ask!";
+    }
+    
+    // ============ TEAM ============
+    if (msg.includes('team') || msg.includes('leadership') || msg.includes('founder')) {
+      return "👥 **Track2311 Leadership Team:**\n\n• **Ernest Garnark Smith Jr** - Founder & CEO\n• **Mrs. Precious N. Onumah-Haizel** - Board Member\n• **Michael Bobby Bull** - Chairman of the Board\n• **Hon. Richard Fatorma Ngafuan** - Board Member\n\nVisit our 'Team' page to learn more about each member.";
+    }
+    
+    // ============ HELP ============
+    if (msg.includes('help') || msg.includes('support')) {
+      return "🆘 **How can I help you?**\n\nYou can ask me about:\n• Company information and location\n• Investment plans and returns\n• Registration and login\n• Services we offer\n• Career opportunities\n• Contact information\n• Our team\n\nWhat would you like to know? 😊";
+    }
+    
+    // ============ DEFAULT ============
+    return "🌾 Thanks for your question! I'm here to help with information about Track2311. You can ask me about:\n\n📌 Company info & location\n📌 Investment plans & returns\n📌 Registration & login\n📌 Our services\n📌 Career opportunities\n📌 Contact information\n📌 Our team\n\nWhat would you like to know about Track2311? 😊";
   };
 
   const sendToBackend = async (name, email, message) => {
@@ -105,7 +168,7 @@ const LiveChat = () => {
     if (userName.trim() && userEmail.trim()) {
       setIsNameCollected(true);
       
-      const welcomeMessageText = `Nice to meet you, ${userName}! 👨‍🌾 I'm your Track2311 AI Chatbot assistant. What would you like to know?`;
+      const welcomeMessageText = `Nice to meet you, ${userName}! 👨‍🌾 I'm your Track2311 AI Chatbot assistant. I can answer questions about our farming services, investments, registration, and company info. What would you like to know?`;
       
       const welcomeBotMessage = {
         id: messages.length + 1,
@@ -137,6 +200,7 @@ const LiveChat = () => {
           <FaArrowUp className="w-4 h-4 group-hover:-translate-y-0.5 transition-transform" />
         </button>
 
+        {/* Chat Button with Tooltip - Hidden on mobile */}
         <div className="relative group">
           <button
             onClick={openChat}
@@ -146,10 +210,10 @@ const LiveChat = () => {
             <FaComment className="w-5 h-5" />
             <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse"></span>
           </button>
-          <div className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-gray-800 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap pointer-events-none">
+          {/* Tooltip on hover - ONLY visible on desktop (hidden on mobile) */}
+          <span className="hidden sm:block absolute bottom-full right-0 mb-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none z-50 shadow-lg">
             Chat with our AI Chatbot
-            <div className="absolute top-full right-3 w-2 h-2 bg-gray-800 transform rotate-45"></div>
-          </div>
+          </span>
         </div>
       </div>
 
@@ -157,8 +221,17 @@ const LiveChat = () => {
         <div className="fixed bottom-24 right-6 z-50 w-[85vw] sm:w-96 h-[60vh] sm:h-[550px] bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col animate-slide-up">
           <div className="bg-gradient-to-r from-primary to-secondary text-white p-4 flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-accent rounded-full flex items-center justify-center">
-                <FaComment className="text-primary" />
+              <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center overflow-hidden">
+                <img 
+                  src="/images/logo/logo.png" 
+                  alt="Track2311 Logo" 
+                  className="w-8 h-8 object-contain"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.style.display = 'none';
+                    e.target.parentElement.innerHTML = '<span className="text-primary text-xl font-bold">T</span>';
+                  }}
+                />
               </div>
               <div>
                 <h3 className="font-bold text-sm md:text-base">Track2311 AI Chatbot</h3>

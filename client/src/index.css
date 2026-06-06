@@ -228,39 +228,40 @@ nav a:hover::after {
 }
 
 /* ============================================ */
-/* MARQUEE ANIMATIONS FOR CLIENT REVIEWS - FASTER ON ALL DEVICES */
+/* MARQUEE ANIMATIONS - SMOOTH & FAST ON ALL DEVICES */
 /* ============================================ */
 
+/* Create a seamless loop by moving the entire content */
 @keyframes marquee-left {
   0% {
     transform: translateX(0);
   }
   100% {
-    transform: translateX(-50%);
+    transform: translateX(-33.333%);
   }
 }
 
 @keyframes marquee-right {
   0% {
-    transform: translateX(-50%);
+    transform: translateX(-33.333%);
   }
   100% {
     transform: translateX(0);
   }
 }
 
-/* Default speed for desktop/laptop - faster */
+/* Default speed for desktop/laptop - smooth and fast */
 .animate-marquee-left {
-  animation: marquee-left 18s linear infinite;
+  animation: marquee-left 20s linear infinite;
   width: max-content;
 }
 
 .animate-marquee-right {
-  animation: marquee-right 18s linear infinite;
+  animation: marquee-right 20s linear infinite;
   width: max-content;
 }
 
-/* Even faster on mobile devices */
+/* Faster on mobile devices - no blinking */
 @media (max-width: 768px) {
   .animate-marquee-left {
     animation-duration: 12s !important;
