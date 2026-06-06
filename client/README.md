@@ -49,30 +49,6 @@ A full-stack web application for a Liberian agricultural investment firm, featur
 
 ---
 
-## 📁 Project Structure
-
-```
-track-investments/
-├── client/                 # React frontend
-│   ├── src/
-│   │   ├── components/     # Reusable components
-│   │   ├── context/        # React context (Auth, Chat, Language)
-│   │   ├── pages/          # Page components
-│   │   ├── utils/          # Utility functions
-│   │   └── styles/         # CSS files
-│   ├── public/             # Static assets
-│   └── package.json
-│
-├── server/                 # Node.js backend
-│   ├── models/             # MongoDB models
-│   ├── routes/             # API routes
-│   ├── config/             # Configuration files
-│   ├── middleware/         # Custom middleware
-│   └── package.json
-│
-└── README.md
-```
-
 ---
 
 ## 🚀 Installation & Setup
