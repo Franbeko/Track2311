@@ -20,26 +20,26 @@ A full-stack web application for a Liberian agricultural investment firm, featur
 
 ## ✨ Features
 
-| Feature | Description |
-|---------|-------------|
-| **User Authentication** | Email/Password + Google OAuth login |
-| **AI Chatbot** | Intelligent chatbot for customer support and FAQs |
-| **Investment Plans** | Multiple investment options with ROI calculations |
-| **Job Application System** | Submit applications for career opportunities |
-| **Contact Form** | Automated email responses |
-| **Responsive Design** | Fully responsive on all devices |
+| Feature                    | Description                                       |
+| -------------------------- | ------------------------------------------------- |
+| **User Authentication**    | Email/Password + Google OAuth login               |
+| **AI Chatbot**             | Intelligent chatbot for customer support and FAQs |
+| **Investment Plans**       | Multiple investment options with ROI calculations |
+| **Job Application System** | Submit applications for career opportunities      |
+| **Contact Form**           | Automated email responses                         |
+| **Responsive Design**      | Fully responsive on all devices                   |
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Category | Technologies |
-|----------|--------------|
-| **Frontend** | React, Vite, Tailwind CSS |
-| **Backend** | Node.js, Express |
-| **Database** | MongoDB |
-| **Authentication** | Google OAuth, JWT |
-| **Deployment** | Vercel (Frontend), Dokploy (Backend + MongoDB on VPS) |
+| Category           | Technologies                                          |
+| ------------------ | ----------------------------------------------------- |
+| **Frontend**       | React, Vite, Tailwind CSS                             |
+| **Backend**        | Node.js, Express                                      |
+| **Database**       | MongoDB                                               |
+| **Authentication** | Google OAuth, JWT                                     |
+| **Deployment**     | Vercel (Frontend), Dokploy (Backend + MongoDB on VPS) |
 
 ---
 
@@ -119,21 +119,21 @@ Frontend runs at `http://localhost:5173`
 
 ### Backend (.env)
 
-| Variable | Description |
-|----------|-------------|
-| `PORT` | Server port (default: 5000) |
-| `MONGODB_URI` | MongoDB connection string |
-| `JWT_SECRET` | JWT secret key |
-| `FRONTEND_URL` | Frontend URL for CORS |
-| `EMAIL_USER` | Gmail for notifications |
-| `EMAIL_PASS` | Gmail app password |
-| `GOOGLE_CLIENT_ID` | Google OAuth client ID |
-| `GOOGLE_CLIENT_SECRET` | Google OAuth secret |
+| Variable               | Description                 |
+| ---------------------- | --------------------------- |
+| `PORT`                 | Server port (default: 5000) |
+| `MONGODB_URI`          | MongoDB connection string   |
+| `JWT_SECRET`           | JWT secret key              |
+| `FRONTEND_URL`         | Frontend URL for CORS       |
+| `EMAIL_USER`           | Gmail for notifications     |
+| `EMAIL_PASS`           | Gmail app password          |
+| `GOOGLE_CLIENT_ID`     | Google OAuth client ID      |
+| `GOOGLE_CLIENT_SECRET` | Google OAuth secret         |
 
 ### Frontend (.env)
 
-| Variable | Description |
-|----------|-------------|
+| Variable       | Description     |
+| -------------- | --------------- |
 | `VITE_API_URL` | Backend API URL |
 
 ---
@@ -168,4 +168,3 @@ Frontend runs at `http://localhost:5173`
 ---
 
 **Built with ❤️ by Francis Kojo Haizel**
-```
