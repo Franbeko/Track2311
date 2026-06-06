@@ -1,22 +1,3 @@
-**YES! Delete the old README in the client folder.** That's the one causing confusion.
-
-## Delete the old README:
-
-```bash
-rm client/README.md
-```
-
-Or manually delete it from VS Code.
-
-## Now update your root README with the full content including installation process:
-
-```bash
-# Open README.md in VS Code and replace with full content
-```
-
-Here's the **full updated README** with installation process (copy this into your root `README.md`):
-
-```markdown
 # 🌾 Track2311 Investments - Agricultural Investment Platform
 
 A full-stack web application for a Liberian agricultural investment firm, featuring user authentication, AI-powered chatbot, job application system, and investment management.
