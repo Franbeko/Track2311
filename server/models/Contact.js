@@ -21,6 +21,10 @@ const contactSchema = new mongoose.Schema({
     enum: ['unread', 'read', 'replied'],
     default: 'unread'
   },
+  isRead: {
+    type: Boolean,
+    default: false
+  },
   createdAt: {
     type: Date,
     default: Date.now

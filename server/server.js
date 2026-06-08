@@ -29,6 +29,7 @@ app.use('/api/contact', require('./routes/contact'));
 app.use('/api/newsletter', require('./routes/newsletter'));
 app.use('/api/password-reset', require('./routes/passwordReset'));
 app.use('/api/applications', require('./routes/applications'));
+app.use('/api/admin', require('./routes/admin'));
 
 // Test route
 app.get('/api/test', (req, res) => {

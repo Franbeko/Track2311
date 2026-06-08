@@ -19,6 +19,15 @@ const Navbar = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [loginModalMode, setLoginModalMode] = useState('login');
 
+  // Admin emails list
+  const adminEmails = [
+    'egsmithjr@track2311investments.org',
+    'franciskhhaizel@gmail.com'
+  ];
+  
+  const isAdmin = user && adminEmails.includes(user.email);
+  const isRegularUser = user && !isAdmin;
+
   const languages = [
     { code: 'en', name: 'English', flag: '🇬🇧' },
     { code: 'es', name: 'Español', flag: '🇪🇸' },
@@ -153,7 +162,7 @@ const Navbar = () => {
               </Link>
             </div>
 
-            {/* Right Side: Language Selector + Login Button */}
+            {/* Right Side: Language Selector + Auth Buttons */}
             <div className="hidden lg:flex items-center space-x-4">
               {/* Language Selector Dropdown */}
               <div className="relative">
@@ -187,12 +196,22 @@ const Navbar = () => {
                 )}
               </div>
 
-              {/* Auth Buttons - Only Login */}
+              {/* Auth Buttons - Separate for Admin and Regular Users */}
               {user ? (
                 <>
-                  <Link to="/account" className="text-gray-700 hover:text-primary font-medium transition-colors">
-                    My Account
-                  </Link>
+                  {/* Show Admin Dashboard ONLY for admin users */}
+                  {isAdmin && (
+                    <Link to="/admin" className="text-gray-700 hover:text-primary font-medium transition-colors">
+                      Admin Dashboard
+                    </Link>
+                  )}
+                  {/* Show My Account ONLY for regular (non-admin) users */}
+                  {isRegularUser && (
+                    <Link to="/account" className="text-gray-700 hover:text-primary font-medium transition-colors">
+                      My Account
+                    </Link>
+                  )}
+                  {/* Logout button for both */}
                   <button onClick={handleLogout} className="bg-red-600 text-white px-5 py-2 rounded-lg hover:bg-red-700 transition-all font-medium">
                     {t.nav?.logout || 'Logout'}
                   </button>
@@ -293,9 +312,19 @@ const Navbar = () => {
               {/* Mobile Auth Buttons */}
               {user ? (
                 <>
-                  <Link to="/account" className="block text-gray-700 hover:text-primary py-2" onClick={() => setIsOpen(false)}>
-                    My Account
-                  </Link>
+                  {/* Show Admin Dashboard ONLY for admin users */}
+                  {isAdmin && (
+                    <Link to="/admin" className="block text-gray-700 hover:text-primary py-2" onClick={() => setIsOpen(false)}>
+                      Admin Dashboard
+                    </Link>
+                  )}
+                  {/* Show My Account ONLY for regular (non-admin) users */}
+                  {isRegularUser && (
+                    <Link to="/account" className="block text-gray-700 hover:text-primary py-2" onClick={() => setIsOpen(false)}>
+                      My Account
+                    </Link>
+                  )}
+                  {/* Logout button for both */}
                   <button onClick={() => { handleLogout(); setIsOpen(false); }} className="block w-full text-left text-red-600 py-2 font-medium">
                     {t.nav?.logout || 'Logout'}
                   </button>
