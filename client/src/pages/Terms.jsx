@@ -187,8 +187,8 @@ const Terms = () => {
                 </p>
                 <p className="text-gray-600 text-sm">
                   For any questions regarding these Terms & Conditions, please contact our legal team at 
-                  <a href="mailto:track2311.investments@gmail.com" className="text-primary font-semibold ml-1 hover:text-accent transition">
-                    track2311.investments@gmail.com
+                  <a href="mailto:egsmithjr@track2311investments.org" className="text-primary font-semibold ml-1 hover:text-accent transition">
+                    egsmithjr@track2311investments.org
                   </a>
                 </p>
               </motion.div>

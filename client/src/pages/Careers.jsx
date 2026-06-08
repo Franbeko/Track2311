@@ -789,8 +789,8 @@ const Careers = () => {
                 {t.careers?.contact?.subtitle || "Our HR team is here to help. Reach out to us for any inquiries about job opportunities."}
               </p>
               <div className="flex flex-col md:flex-row justify-center gap-4">
-                <a href={`mailto:${t.careers?.contact?.email || "track2311.investments@gmail.com"}`} className="bg-accent text-primary px-8 py-3 rounded-lg font-semibold hover:shadow-lg transition inline-flex items-center justify-center gap-2">
-                  <FaEnvelope /> {t.careers?.contact?.email || "track2311.investments@gmail.com"}
+                <a href={`mailto:${t.careers?.contact?.email || "egsmithjr@track2311investments.org"}`} className="bg-accent text-primary px-8 py-3 rounded-lg font-semibold hover:shadow-lg transition inline-flex items-center justify-center gap-2">
+                  <FaEnvelope /> {t.careers?.contact?.email || "egsmithjr@track2311investments.org"}
                 </a>
                 <a href={`tel:${t.careers?.contact?.phone || "+231555123456"}`} className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary transition inline-flex items-center justify-center gap-2">
                   <FaPhone /> {t.careers?.contact?.phone || "+231 555 123 456"}

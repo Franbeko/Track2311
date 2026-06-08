@@ -52,7 +52,7 @@ const Navbar = () => {
             <div className="flex items-center space-x-6">
               <div className="flex items-center space-x-2 group">
                 <FaEnvelope className="text-accent group-hover:scale-110 transition-transform" />
-                <span className="text-sm">track2311.investments@gmail.com</span>
+                <span className="text-sm">egsmithjr@track2311investments.org</span>
               </div>
               <div className="flex items-center space-x-2 group">
                 <FaPhone className="text-accent group-hover:scale-110 transition-transform" />

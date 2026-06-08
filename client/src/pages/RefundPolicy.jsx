@@ -264,7 +264,7 @@ const RefundPolicy = () => {
                   Our support team is here to help with any refund-related questions
                 </p>
                 <div className="flex flex-wrap justify-center gap-4">
-                  <a href="mailto:track2311.investments@gmail.com" className="inline-flex items-center gap-2 bg-accent text-primary px-4 py-2 rounded-lg font-semibold hover:bg-opacity-90 transition">
+                  <a href="mailto:egsmithjr@track2311investments.org" className="inline-flex items-center gap-2 bg-accent text-primary px-4 py-2 rounded-lg font-semibold hover:bg-opacity-90 transition">
                     <FaEnvelope /> Email Support
                   </a>
                   <a href="tel:+19016080131" className="inline-flex items-center gap-2 bg-white/20 text-white px-4 py-2 rounded-lg font-semibold hover:bg-white/30 transition">

@@ -351,7 +351,7 @@ const FAQ = () => {
                 <h3 className="text-2xl font-bold mb-3">Email Us</h3>
                 <p className="text-gray-200 mb-4">Send us your questions anytime</p>
                 <a href="mailto:track2311.investments@gmail.com" className="inline-block bg-accent text-primary px-6 py-2 rounded-lg font-semibold hover:shadow-lg transition">
-                  track2311.investments@gmail.com
+                  egsmithjr@track2311investments.org
                 </a>
               </motion.div>
 

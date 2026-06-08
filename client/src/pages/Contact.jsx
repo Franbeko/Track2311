@@ -65,7 +65,7 @@ const Contact = () => {
       countryKey: "liberia",
       addressKey: "liberiaAddress",
       phone: "+231-777-511-666 / +231-886-511-666",
-      email: "track2311.investments@gmail.com",
+      email: "egsmithjr@track2311investments.org",
       icon: <FaSeedling className="text-3xl" />,
       farmingRegions: ["Lofa", "Bong", "Nimba", "Grand Gedeh"]
     },
@@ -73,7 +73,7 @@ const Contact = () => {
       countryKey: "morocco",
       addressKey: "moroccoAddress",
       phone: "+212 5 22 123 456",
-      email: "track2311.investments@gmail.com",
+      email: "egsmithjr@track2311investments.org",
       icon: <FaGlobe className="text-3xl" />,
       farmingRegions: ["Rabat-Salé", "Casablanca-Settat"]
     }
@@ -421,7 +421,6 @@ const Contact = () => {
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition resize-none"
                         required
                       ></textarea>
-                      <p className="text-xs text-gray-400 mt-1">Press Enter to send</p>
                     </div>
                     
                     <button 
@@ -461,7 +460,7 @@ const Contact = () => {
                       </div>
                       <div>
                         <h3 className="font-semibold text-lg">{getEmailTitle()}</h3>
-                        <p className="text-gray-600">track2311.investments@gmail.com</p>
+                        <p className="text-gray-600">egsmithjr@track2311investments.org</p>
                       </div>
                     </div>
                     

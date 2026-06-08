@@ -28,7 +28,7 @@ router.post('/', async (req, res) => {
     console.log('Application saved to database:', application._id);
     
     // Send email to company
-    const companyEmail = process.env.COMPANY_EMAIL || 'track2311.investments@gmail.com';
+    const companyEmail = process.env.COMPANY_EMAIL || 'egsmithjr@track2311investments.org';
     
     await resend.emails.send({
       from: 'Track2311 Careers <onboarding@resend.dev>',

@@ -82,7 +82,7 @@ const LiveChat = () => {
     
     // ============ CONTACT ============
     if (msg.includes('contact') || msg.includes('email') || msg.includes('phone') || msg.includes('reach us')) {
-      return "📞 **Contact Track2311:**\n\n**Email:** track2311.investments@gmail.com\n\n**Phone:**\n📞 +1 (901) 608-0131 - International line\n📱 +231 88 651 1666 - Liberia mobile\n\n**Hours:** Mon-Fri 8AM-4PM (Liberia time), Sat 9AM-1PM\n\n💬 I'm available 24/7! How can I help?";
+      return "📞 **Contact Track2311:**\n\n**Email:** egsmithjr@track2311investments.org\n\n**Phone:**\n📞 +1 (901) 608-0131 - International line\n📱 +231 88 651 1666 - Liberia mobile\n\n**Hours:** Mon-Fri 8AM-4PM (Liberia time), Sat 9AM-1PM\n\n💬 I'm available 24/7! How can I help?";
     }
     
     // ============ HOW TO JOIN / CAREERS ============

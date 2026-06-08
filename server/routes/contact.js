@@ -37,7 +37,7 @@ router.post('/', [
     await contact.save();
     
     const fromEmail = process.env.EMAIL_USER || process.env.GMAIL_USER;
-    const companyEmail = process.env.COMPANY_EMAIL || 'track2311.investments@gmail.com';
+    const companyEmail = process.env.COMPANY_EMAIL || 'egsmithjr@track2311investments.org';
     
     // Send email to company
     await transporter.sendMail({

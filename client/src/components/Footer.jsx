@@ -49,7 +49,7 @@ const Footer = () => {
         { icon: <FaFacebook className="w-5 h-5" />, url: "https://www.facebook.com/people/Track2311-Investments-Consultancy-Ltd/100082914168655/", name: "Facebook" },
         { icon: <FaTwitter className="w-5 h-5" />, url: "https://twitter.com/track2311invest?t=f14zVsNckZU3eMYNLRXwnw&s=09", name: "Twitter" },
         { icon: <FaInstagram className="w-5 h-5" />, url: "https://www.instagram.com/p/C578FUKuLBV/?igsh=MWQwcDFwMWp1eW5idA%3D%3D", name: "Instagram" },
-        { icon: <FaEnvelope className="w-5 h-5" />, url: "mailto:track2311.investments@gmail.com", name: "Email" }
+        { icon: <FaEnvelope className="w-5 h-5" />, url: "mailto:egsmithjr@track2311investments.org", name: "Email" }
     ];
 
     const getQuickLinkText = (key) => {
@@ -110,7 +110,7 @@ const Footer = () => {
                         <div className="space-y-2">
                             <p className="text-sm text-gray-300 flex items-center space-x-2">
                                 <FaEnvelope className="text-accent" />
-                                <span>track2311.investments@gmail.com</span>
+                                <span>egsmithjr@track2311investments.org</span>
                             </p>
                             <p className="text-sm text-gray-300 flex items-center space-x-2">
                                 <FaWhatsapp className="text-accent" />

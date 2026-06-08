@@ -230,7 +230,7 @@ const PrivacyPolicy = () => {
                 </p>
                 <div className="space-y-2">
                   <p className="text-gray-600">
-                    📧 <a href="mailto:track2311.investments@gmail.com" className="text-primary hover:text-accent transition">track2311.investments@gmail.com</a>
+                    📧 <a href="mailto:egsmithjr@track2311investments.org" className="text-primary hover:text-accent transition">track2311.investments@gmail.com</a>
                   </p>
                   <p className="text-gray-600">
                     📞 <a href="tel:+19016080131" className="text-primary hover:text-accent transition">+1 (901) 608-0131</a>
