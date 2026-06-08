@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import axios from 'axios';
+import apiClient from '../utils/axiosConfig';
 import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
@@ -33,7 +33,7 @@ const Contact = () => {
     setIsSubmitting(true);
     
     try {
-      const response = await axios.post('http://localhost:5000/api/contact', formData);
+      const response = await apiClient.post('/api/contact', formData);
       
       if (response.data.success) {
         toast.success(t.contact?.alerts?.success || 'Message sent successfully! Our agricultural team will get back to you soon.');
@@ -253,10 +253,6 @@ const Contact = () => {
   const getCtaSubtitle = () => {
     return t.contact?.cta?.subtitle || "Join hundreds of successful Liberian farmers who have transformed their agricultural businesses with Track2311";
   };
-
-//   const getStartJourney = () => {
-//     return t.contact?.buttons?.startJourney || "Start Your Journey";
-//   };
 
   const getExplorePlans = () => {
     return t.contact?.buttons?.explorePlans || "Explore Our Investment Plans";
@@ -703,10 +699,6 @@ const Contact = () => {
                 {getCtaSubtitle()}
               </p>
               <div className="space-x-4">
-                {/* <Link to="/plans" className="bg-primary text-white px-8 py-3 rounded-lg font-semibold hover:bg-secondary 
-                transition inline-block">
-                  {getStartJourney()}
-                </Link> */}
                 <Link to="/plans" className="border-2 border-primary text-primary px-8 py-3 rounded-lg font-semibold 
                  hover:bg-primary hover:text-white transition inline-block">
                   {getExplorePlans()}
