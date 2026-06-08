@@ -6,6 +6,8 @@ import {
   FaEye, FaClock, FaFacebook, FaTwitter,
   FaComment, FaInstagram, FaRegHeart, FaSeedling,
 } from 'react-icons/fa';
+import apiClient from '../utils/axiosConfig';
+import toast from 'react-hot-toast';
 import { useLanguage } from '../context/LanguageContext';
 import SEO from '../components/SEO';
 
@@ -17,6 +19,8 @@ const BlogNews = () => {
   const [commentText, setCommentText] = useState('');
   const [commentName, setCommentName] = useState('');
   const [commentEmail, setCommentEmail] = useState('');
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [isSubscribing, setIsSubscribing] = useState(false);
 
   // Blog Posts Data - Updated for Agriculture Focus
   const blogPosts = [
@@ -235,6 +239,20 @@ const BlogNews = () => {
       setCommentEmail('');
       setCommentText('');
       alert(t.blogNews?.alerts?.commentSuccess || 'Comment added successfully!');
+    }
+  };
+
+  const handleNewsletterSubscribe = async (e) => {
+    e.preventDefault();
+    setIsSubscribing(true);
+    try {
+      await apiClient.post('/api/newsletter/subscribe', { email: newsletterEmail });
+      toast.success('Subscribed successfully!');
+      setNewsletterEmail('');
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Subscription failed');
+    } finally {
+      setIsSubscribing(false);
     }
   };
 
@@ -528,21 +546,30 @@ const BlogNews = () => {
                   </div>
                 </div>
 
-                {/* Newsletter */}
+                {/* Newsletter - UPDATED */}
                 <div className="bg-gradient-to-r from-primary to-secondary rounded-2xl p-6 text-white">
                   <div className="text-3xl mb-3">🌱</div>
                   <h3 className="text-xl font-bold mb-2">Farmer's Newsletter</h3>
                   <p className="text-sm mb-4 opacity-90">
                     Subscribe to get the latest agricultural insights and farming tips directly in your inbox.
                   </p>
-                  <input
-                    type="email"
-                    placeholder="Your email address"
-                    className="w-full px-4 py-2 rounded-lg text-gray-900 mb-3 focus:outline-none focus:ring-2 focus:ring-accent"
-                  />
-                  <button className="w-full bg-accent text-primary px-4 py-2 rounded-lg font-semibold hover:bg-opacity-90 transition">
-                    Subscribe for Agricultural Updates
-                  </button>
+                  <form onSubmit={handleNewsletterSubscribe}>
+                    <input
+                      type="email"
+                      placeholder="Your email address"
+                      value={newsletterEmail}
+                      onChange={(e) => setNewsletterEmail(e.target.value)}
+                      className="w-full px-4 py-2 rounded-lg text-gray-900 mb-3 focus:outline-none focus:ring-2 focus:ring-accent"
+                      required
+                    />
+                    <button 
+                      type="submit"
+                      disabled={isSubscribing}
+                      className="w-full bg-accent text-primary px-4 py-2 rounded-lg font-semibold hover:bg-opacity-90 transition disabled:opacity-50"
+                    >
+                      {isSubscribing ? 'Subscribing...' : 'Subscribe for Agricultural Updates'}
+                    </button>
+                  </form>
                   <p className="text-xs mt-3 opacity-75">No spam, unsubscribe anytime.</p>
                 </div>
               </div>

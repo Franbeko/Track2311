@@ -6,7 +6,7 @@ import {
     FaClock, FaArrowRight,
     FaWhatsapp
 } from 'react-icons/fa';
-import axios from 'axios';
+import apiClient from '../utils/axiosConfig';
 import toast from 'react-hot-toast';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -17,7 +17,7 @@ const Footer = () => {
     const handleSubscribe = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('http://localhost:5000/api/newsletter/subscribe', { email });
+            await apiClient.post('/api/newsletter/subscribe', { email });
             toast.success(t.footer?.alerts?.subscribeSuccess || 'Subscribed successfully!');
             setEmail('');
         } catch (error) {
