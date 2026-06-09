@@ -6,11 +6,11 @@ import toast from 'react-hot-toast';
 import { 
   FaUsers, FaEnvelope, FaBriefcase, FaChartLine, 
   FaCheckCircle, FaTrash,
-  FaSpinner, FaSignOutAlt
+  FaSpinner
 } from 'react-icons/fa';
 
 const AdminDashboard = () => {
-  const { user, logout, openLoginModal } = useAuth();
+  const { user, openLoginModal } = useAuth();
   const navigate = useNavigate();
   
   const [activeTab, setActiveTab] = useState('overview');
@@ -73,12 +73,6 @@ const AdminDashboard = () => {
     loadAllData();
   }, [user, isAdmin]);
 
-  const handleLogout = () => {
-    logout();
-    navigate('/');
-    toast.success('Logged out');
-  };
-
   const markAsRead = async (id) => {
     try {
       await apiClient.put(`/api/admin/contacts/${id}/read`);
@@ -139,7 +133,7 @@ const AdminDashboard = () => {
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
         <div className="text-center">
           <FaSpinner className="text-4xl text-primary animate-spin mx-auto mb-4" />
-          <p className="text-gray-600">Loading dashboard data modules...</p>
+          <p className="text-gray-600">Loading dashboard...</p>
         </div>
       </div>
     );
@@ -190,9 +184,6 @@ const AdminDashboard = () => {
               <p className="text-sm font-semibold">{user?.name}</p>
               <p className="text-xs opacity-75">{user?.email}</p>
             </div>
-            <button onClick={handleLogout} className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg flex items-center gap-2">
-              <FaSignOutAlt /> Logout
-            </button>
           </div>
         </div>
       </div>
