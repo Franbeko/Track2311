@@ -242,7 +242,7 @@ const AdminDashboard = () => {
         <div className="flex justify-between items-center max-w-7xl mx-auto">
           <div>
             <h1 className="text-2xl font-bold">Admin Dashboard</h1>
-            <p className="text-sm opacity-90">Webmaster Management Center</p>
+            <p className="text-sm opacity-90">Webmaster Control Panel, Edit content, manage users, control your website</p>
           </div>
           <div className="text-right">
             <p className="text-sm font-semibold">{user?.name}</p>
