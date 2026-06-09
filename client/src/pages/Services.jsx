@@ -1,15 +1,33 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
-  FaBuilding, FaShippingFast, FaHandHoldingUsd, 
-  FaChartLine, FaHardHat, FaArrowRight, FaCheckCircle,
-  FaGlobe, FaClock, FaShieldAlt, FaSeedling, FaLeaf
+  FaBuilding, FaShippingFast, FaHandHoldingUsd, FaChartLine, FaHardHat, 
+  FaArrowRight, FaCheckCircle, FaGlobe, FaClock, FaShieldAlt, FaSeedling, FaLeaf, FaSpinner
 } from 'react-icons/fa';
 import { useLanguage } from '../context/LanguageContext';
 import SEO from '../components/SEO';
+import apiClient from '../utils/axiosConfig';
 
 const Services = () => {
   const { t } = useLanguage();
+  const [cms, setCms] = useState(null);
+  const [loadingCms, setLoadingCms] = useState(true);
+
+  useEffect(() => {
+    apiClient.get('/api/admin/content')
+      .then(res => setCms(res.data))
+      .catch(err => console.error("Error fetching Services CMS data:", err))
+      .finally(() => setLoadingCms(false));
+  }, []);
+
+  if (loadingCms) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <FaSpinner className="text-4xl text-primary animate-spin" />
+      </div>
+    );
+  }
 
   const services = [
     {
@@ -69,7 +87,6 @@ const Services = () => {
     { step: "04", titleKey: "support", descriptionKey: "supportDesc" }
   ];
 
-  // Helper functions for translations
   const getServiceTitle = (key) => {
     const titles = {
       agriculture: "Agriculture & Agribusiness",
@@ -125,51 +142,25 @@ const Services = () => {
     return t.servicesPage?.features?.[key] || features[key];
   };
 
-  const getProcessTitle = (key) => {
-    const titles = {
-      consultation: "Farm Assessment",
-      strategy: "Strategic Planning",
-      execution: "Implementation",
-      support: "Ongoing Support"
-    };
-    return t.servicesPage?.process?.[key] || titles[key];
-  };
-
-  const getProcessDesc = (key) => {
-    const descs = {
-      consultationDesc: "We assess your farm needs and agricultural goals",
-      strategyDesc: "Develop a customized farming and investment plan",
-      executionDesc: "Implement modern techniques and infrastructure",
-      supportDesc: "Continuous guidance and market access support"
-    };
-    return t.servicesPage?.process?.[`${key}Desc`] || descs[`${key}Desc`];
-  };
-
   return (
     <>
       <SEO 
         title="Agricultural & Investment Services - Track2311"
         description="Track2311 offers comprehensive agricultural services including modern farming, farmland development, agricultural export, farmers' micro-finance, agribusiness consultancy, and farm infrastructure construction in Liberia."
-        keywords="agricultural services, farming services, farmland development, agricultural export, micro-finance for farmers, agribusiness consultancy, farm construction, Liberia agriculture"
+        keywords="agricultural services, farming services, farmland development, agricultural export, micro-finance for farmers, agribusiness consultancy"
       />
       
       <div>
         {/* Hero Section */}
         <section className="bg-gradient-to-r from-primary to-secondary text-white py-20">
           <div className="container mx-auto px-4 text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              <span className="text-accent font-semibold text-sm uppercase tracking-wider">
-                {t.servicesPage?.hero?.badge || "What We Offer"}
-              </span>
+            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
+              <span className="text-accent font-semibold text-sm uppercase tracking-wider">{t.servicesPage?.hero?.badge || "What We Offer"}</span>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mt-2 mb-4">
-                {t.servicesPage?.hero?.title || "Agricultural & Investment Services"}
+                {cms?.servicesHeroTitle || t.servicesPage?.hero?.title || "Agricultural & Investment Services"}
               </h1>
               <p className="text-xl max-w-3xl mx-auto">
-                {t.servicesPage?.hero?.subtitle || "Comprehensive agricultural solutions and investment opportunities for farmers and agribusinesses"}
+                {cms?.servicesHeroSubtitle || t.servicesPage?.hero?.subtitle || "Comprehensive agricultural solutions and investment opportunities..."}
               </p>
             </motion.div>
           </div>
@@ -178,20 +169,13 @@ const Services = () => {
         {/* Services Grid Section */}
         <section className="py-20 bg-gray-50">
           <div className="container mx-auto px-4">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="text-center mb-12"
-            >
-              <span className="text-accent font-semibold text-sm uppercase tracking-wider">
-                {t.servicesPage?.grid?.badge || "Core Offerings"}
-              </span>
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="text-center mb-12">
+              <span className="text-accent font-semibold text-sm uppercase tracking-wider">{t.servicesPage?.grid?.badge || "Core Offerings"}</span>
               <h2 className="text-3xl md:text-4xl font-bold mt-2 mb-4 text-primary">
-                {t.servicesPage?.grid?.title || "Agricultural Services We Provide"}
+                {cms?.servicesGridTitle || t.servicesPage?.grid?.title || "Agricultural Services We Provide"}
               </h2>
               <p className="text-gray-600 max-w-2xl mx-auto">
-                {t.servicesPage?.grid?.subtitle || "Supporting Liberian farmers and agribusinesses from farm to global market"}
+                {cms?.servicesGridSubtitle || t.servicesPage?.grid?.subtitle || "Supporting Liberian farmers and agribusinesses from farm to global market"}
               </p>
             </motion.div>
 
@@ -205,9 +189,7 @@ const Services = () => {
                   className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 group"
                 >
                   <div className={`bg-gradient-to-r ${service.color} p-6 text-white`}>
-                    <div className="text-accent group-hover:scale-110 transition-transform duration-300">
-                      {service.icon}
-                    </div>
+                    <div className="text-accent group-hover:scale-110 transition-transform duration-300">{service.icon}</div>
                     <h3 className="text-2xl font-bold mt-4">{getServiceTitle(service.titleKey)}</h3>
                   </div>
                   <div className="p-6">
@@ -220,10 +202,7 @@ const Services = () => {
                         </div>
                       ))}
                     </div>
-                    <Link 
-                      to="/contact" 
-                      className="inline-flex items-center text-primary font-semibold hover:text-accent transition-colors group"
-                    >
+                    <Link to="/contact" className="inline-flex items-center text-primary font-semibold hover:text-accent transition-colors group">
                       {t.servicesPage?.buttons?.learnMore || "Learn More"}
                       <FaArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
                     </Link>
@@ -234,21 +213,13 @@ const Services = () => {
           </div>
         </section>
 
-        {/* Why Choose Our Services Section */}
+        {/* Why Choose Us Section */}
         <section className="py-20 bg-white">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-              <motion.div
-                initial={{ opacity: 0, x: -50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6 }}
-              >
-                <span className="text-accent font-semibold text-sm uppercase tracking-wider">
-                  {t.servicesPage?.whyChooseUs?.badge || "Why Trust Us"}
-                </span>
-                <h2 className="text-3xl md:text-4xl font-bold mt-2 mb-6 text-primary">
-                  {t.servicesPage?.whyChooseUs?.title || "Why Choose Our Agricultural Services?"}
-                </h2>
+              <motion.div initial={{ opacity: 0, x: -50 }} whileInView={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }}>
+                <span className="text-accent font-semibold text-sm uppercase tracking-wider">{t.servicesPage?.whyChooseUs?.badge || "Why Trust Us"}</span>
+                <h2 className="text-3xl md:text-4xl font-bold mt-2 mb-6 text-primary">{t.servicesPage?.whyChooseUs?.title || "Why Choose Our Agricultural Services?"}</h2>
                 <div className="space-y-4">
                   <div className="flex items-start space-x-3">
                     <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -289,29 +260,18 @@ const Services = () => {
                 </div>
               </motion.div>
 
-              <motion.div
-                initial={{ opacity: 0, x: 50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6 }}
-                className="bg-gray-50 rounded-xl p-8"
-              >
+              <motion.div initial={{ opacity: 0, x: 50 }} whileInView={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }} className="bg-gray-50 rounded-xl p-8">
                 <div className="text-center mb-6">
-                  <span className="text-accent font-semibold text-sm uppercase tracking-wider">
-                    {t.servicesPage?.ourApproach?.badge || "Our Approach"}
-                  </span>
-                  <h3 className="text-2xl font-bold text-primary mt-2">
-                    {t.servicesPage?.ourApproach?.title || "How We Work With Farmers"}
-                  </h3>
+                  <span className="text-accent font-semibold text-sm uppercase tracking-wider">{t.servicesPage?.ourApproach?.badge || "Our Approach"}</span>
+                  <h3 className="text-2xl font-bold text-primary mt-2">{t.servicesPage?.ourApproach?.title || "How We Work With Farmers"}</h3>
                 </div>
                 <div className="space-y-6">
                   {process.map((item, index) => (
                     <div key={index} className="flex items-center space-x-4">
-                      <div className="w-12 h-12 bg-accent text-primary rounded-full flex items-center justify-center font-bold text-lg">
-                        {item.step}
-                      </div>
+                      <div className="w-12 h-12 bg-accent text-primary rounded-full flex items-center justify-center font-bold text-lg">{item.step}</div>
                       <div>
-                        <h4 className="font-bold text-primary">{getProcessTitle(item.titleKey)}</h4>
-                        <p className="text-gray-600 text-sm">{getProcessDesc(item.descriptionKey)}</p>
+                        <h4 className="font-bold text-primary">{t.servicesPage?.process?.[item.titleKey] || item.titleKey}</h4>
+                        <p className="text-gray-600 text-sm">{t.servicesPage?.process?.[`${item.descriptionKey}`] || item.descriptionKey}</p>
                       </div>
                     </div>
                   ))}
@@ -324,27 +284,17 @@ const Services = () => {
         {/* Global Presence Section */}
         <section className="py-20 bg-gradient-to-r from-primary to-secondary text-white">
           <div className="container mx-auto px-4 text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              <span className="text-accent font-semibold text-sm uppercase tracking-wider">
-                {t.servicesPage?.globalPresence?.badge || "Global Reach"}
-              </span>
-              <h2 className="text-3xl md:text-4xl font-bold mt-2 mb-4">
-                {t.servicesPage?.globalPresence?.title || "Exporting Liberian Agriculture Worldwide"}
-              </h2>
-              <p className="text-xl max-w-2xl mx-auto mb-8">
-                {t.servicesPage?.globalPresence?.subtitle || "Connecting Liberian farmers to international markets across Africa and beyond"}
-              </p>
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+              <span className="text-accent font-semibold text-sm uppercase tracking-wider">{t.servicesPage?.globalPresence?.badge || "Global Reach"}</span>
+              <h2 className="text-3xl md:text-4xl font-bold mt-2 mb-4">{t.servicesPage?.globalPresence?.title || "Exporting Liberian Agriculture Worldwide"}</h2>
+              <p className="text-xl max-w-2xl mx-auto mb-8">{t.servicesPage?.globalPresence?.subtitle || "Connecting Liberian farmers to international markets across Africa and beyond"}</p>
               <div className="flex flex-wrap justify-center gap-6">
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg px-6 py-3">
                   <span className="font-semibold">🇱🇷 {t.servicesPage?.countries?.liberia || "Liberia"}</span>
                   <span className="text-xs ml-1 text-accent">(Headquarters)</span>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg px-6 py-3">
-                  <span className="font-semibold">ma {t.servicesPage?.countries?.morocco || "Morocco"}</span>
+                  <span className="font-semibold">🇲🇦 {t.servicesPage?.countries?.morocco || "Morocco"}</span>
                 </div>
               </div>
             </motion.div>
@@ -354,17 +304,13 @@ const Services = () => {
         {/* CTA Section */}
         <section className="py-20 bg-white">
           <div className="container mx-auto px-4 text-center">
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ duration: 0.6 }}
-            >
+            <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.6 }}>
               <div className="text-6xl mb-4">🌾</div>
               <h2 className="text-3xl md:text-4xl font-bold mb-4 text-primary">
-                {t.servicesPage?.cta?.title || "Ready to Transform Your Farming Business?"}
+                {cms?.servicesCtaTitle || t.servicesPage?.cta?.title || "Ready to Transform Your Farming Business?"}
               </h2>
               <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-                {t.servicesPage?.cta?.subtitle || "Let's discuss how our agricultural services can help you grow more, earn more, and reach global markets"}
+                {cms?.servicesCtaSubtitle || t.servicesPage?.cta?.subtitle || "Let's discuss how our agricultural services can help you grow more..."}
               </p>
               <div className="space-x-4">
                 <Link to="/contact" className="bg-primary text-white px-8 py-3 rounded-lg font-semibold hover:bg-secondary transition-all inline-block transform hover:scale-105">
