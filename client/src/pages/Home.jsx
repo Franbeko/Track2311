@@ -1,9 +1,10 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
     FaChartLine, FaShieldAlt, FaUsers, FaArrowRight,
     FaHeadset, FaGlobe, FaCheckCircle,
-    FaAward, FaTractor, FaSeedling
+    FaAward, FaTractor, FaSeedling, FaSpinner
 } from 'react-icons/fa';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination, Navigation, EffectFade } from 'swiper/modules';
@@ -13,6 +14,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
 import CookieConsent from '../components/CookieConsent';
 import SEO from '../components/SEO';
+import apiClient from '../utils/axiosConfig';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -24,10 +26,27 @@ const Home = () => {
     const { t } = useLanguage();
     const { openLoginModal, isAuthenticated } = useAuth();
 
-    // Check if user is logged in to hide Get Started button
+    const [cms, setCms] = useState(null);
+    const [loadingCms, setLoadingCms] = useState(true);
+
+    // Synchronize content components directly on layout mounting
+    useEffect(() => {
+        apiClient.get('/api/admin/content')
+            .then(res => setCms(res.data))
+            .catch(err => console.error("Error pulling live CMS strings:", err))
+            .finally(() => setLoadingCms(false));
+    }, []);
+
     const isGetStartedButtonVisible = !isAuthenticated;
 
-    // Updated features with agriculture focus
+    if (loadingCms) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-white">
+                <FaSpinner className="text-4xl text-primary animate-spin" />
+            </div>
+        );
+    }
+
     const features = [
         { 
             icon: <FaSeedling className="text-4xl" />, 
@@ -55,7 +74,6 @@ const Home = () => {
         },
     ];
 
-    // Updated stats with agriculture focus
     const stats = [
         { value: "5000+", label: t.stats?.farmersSupported || "Farmers Supported", icon: <FaUsers /> },
         { value: "10+", label: t.stats?.countriesExported || "Countries Exported To", icon: <FaGlobe /> },
@@ -63,32 +81,30 @@ const Home = () => {
         { value: "98%", label: t.stats?.satisfactionRate || "Farmer Satisfaction", icon: <FaAward /> },
     ];
 
-    // Updated slides to use language context
     const slides = [
         {
-            title: t.hero?.slide1Title || "Growing Liberia's Agricultural Future",
-            subtitle: t.hero?.slide1Subtitle || "Empowering local farmers with modern techniques and global market access",
+            title: cms?.homeSlide1Title || t.hero?.slide1Title || "Growing Liberia's Agricultural Future",
+            subtitle: cms?.homeSlide1Subtitle || t.hero?.slide1Subtitle || "Empowering local farmers with modern techniques and global market access",
             image: "/images/slider/slide1.jpg",
             buttonText: t.hero?.getStarted || "Get Started",
             isModalButton: true
         },
         {
-            title: t.hero?.slide2Title || "Smart Farm Investments, Real Returns",
-            subtitle: t.hero?.slide2Subtitle || "Building wealth through strategic agricultural investments and modern farming",
+            title: cms?.homeSlide2Title || t.hero?.slide2Title || "Smart Farm Investments, Real Returns",
+            subtitle: cms?.homeSlide2Subtitle || t.hero?.slide2Subtitle || "Building wealth through strategic agricultural investments and modern farming",
             image: "/images/slider/slide2.jpg",
             buttonText: t.hero?.learnMore || "Learn More",
             link: "/about"
         },
         {
-            title: t.hero?.slide3Title || "From Local Farms to Global Markets",
-            subtitle: t.hero?.slide3Subtitle || "Connecting Liberian agriculture with international opportunities",
+            title: cms?.homeSlide3Title || t.hero?.slide3Title || "From Local Farms to Global Markets",
+            subtitle: cms?.homeSlide3Subtitle || t.hero?.slide3Subtitle || "Connecting Liberian agriculture with international opportunities",
             image: "/images/slider/slide3.jpg",
             buttonText: t.hero?.contactUs || "Contact Us",
             link: "/contact"
         }
     ];
 
-    // Team Members - 4 members total (Ernest added back)
     const teamMembers = [
         {
             name: "Michael Bobby Bull",
@@ -116,7 +132,6 @@ const Home = () => {
         },
     ];
 
-    // Partners data
     const partners = [
         { name: "Liberia Bank for Development", logo: "/images/partners/partner1.png" },
         { name: "Ministry of Agriculture", logo: "/images/partners/partner2.png" },
@@ -126,7 +141,6 @@ const Home = () => {
         { name: "World Business Alliance", logo: "/images/partners/partner6.png" },
     ];
 
-    // Achievements data
     const achievements = [
         { icon: "🏆", title: "Best Agri-Investment Platform", year: "2023", description: "Awarded for agricultural excellence" },
         { icon: "⭐", title: "Top Rated Service", year: "2024", description: "5-star farmer satisfaction" },
@@ -260,17 +274,17 @@ const Home = () => {
                                     {t.about?.aboutUs || "About Us"}
                                 </span>
                                 <h2 className="text-3xl md:text-4xl font-bold mt-2 mb-6 text-primary">
-                                    {t.about?.title || "Growing Liberia Through Agriculture & Smart Investments"}
+                                    {cms?.homeAboutHeading || t.about?.title || "Growing Liberia Through Agriculture & Smart Investments"}
                                 </h2>
                                 <div className="space-y-4 text-gray-600">
                                     <p className="italic text-gray-500 border-l-4 border-accent pl-4">
-                                        {t.about?.quote || '"If you can\'t fly then run, if you can\'t run then walk, if you can\'t walk then crawl, but whatever you do you have to keep moving forward." - Dr. Martin Luther King, Jr.'}
+                                        {cms?.homeAboutQuote || t.about?.quote || '"If you can\'t fly then run..."'}
                                     </p>
                                     <p>
-                                        {t.about?.description1 || "Track2311 Investment and Consultancy is committed to transforming Liberia's agricultural sector while providing smart investment solutions. We empower local farmers, create sustainable opportunities, and drive economic growth."}
+                                        {cms?.homeAboutDescription1 || t.about?.description1 || "Track2311 Investment and Consultancy..."}
                                     </p>
                                     <p>
-                                        {t.about?.description2 || "Our mission is to bridge the gap between local farmers and global markets, providing modern farming techniques, equipment access, and investment opportunities that benefit both farmers and investors."}
+                                        {cms?.homeAboutDescription2 || t.about?.description2 || "Our mission is to bridge..."}
                                     </p>
                                     <div className="grid grid-cols-2 gap-4 pt-4">
                                         <div className="flex items-center space-x-2">
@@ -328,7 +342,6 @@ const Home = () => {
                     </div>
                 </section>
 
-                {/* Services Section */}
                 <ServicesSection />
 
                 {/* Why Choose Us Section */}
@@ -347,7 +360,7 @@ const Home = () => {
                                 {t.whyChooseUs?.heading || "Your Trusted Partner in Agriculture & Investment"}
                             </h2>
                             <p className="text-gray-600 max-w-2xl mx-auto">
-                                {t.whyChooseUs?.description || "With years of experience in Liberian agriculture and global investment markets, we deliver real results"}
+                                {t.whyChooseUs?.description || "With years of experience in Liberian agriculture..."}
                             </p>
                         </motion.div>
 
@@ -450,7 +463,7 @@ const Home = () => {
                     </div>
                 </section>
 
-                {/* Team Preview Section - RESPONSIVE: 3 on mobile/tablet, 4 on monitor (xl screens) */}
+                {/* Team Preview Section */}
                 <section className="py-20 bg-gray-50">
                     <div className="container mx-auto px-4">
                         <motion.div
@@ -470,7 +483,6 @@ const Home = () => {
                             </p>
                         </motion.div>
 
-                        {/* Responsive grid: 1 on mobile, 2 on tablet, 3 on laptop, 4 on monitor/xl screens */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                             {teamMembers.map((member, index) => (
                                 <motion.div
@@ -509,7 +521,6 @@ const Home = () => {
                     </div>
                 </section>
 
-                {/* Client Reviews Section */}
                 <ClientReviews />
 
                 {/* Partners & Clients Section */}
@@ -590,7 +601,7 @@ const Home = () => {
                     </div>
                 </section>
 
-                {/* Market Insights & Opportunities Section */}
+                {/* Market Insights Section */}
                 <section className="py-20 bg-white">
                     <div className="container mx-auto px-4">
                         <motion.div
@@ -611,7 +622,6 @@ const Home = () => {
                         </motion.div>
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                            {/* Agriculture Card */}
                             <motion.div
                                 initial={{ opacity: 0, y: 30 }}
                                 whileInView={{ opacity: 1, y: 0 }}
@@ -645,7 +655,6 @@ const Home = () => {
                                 </div>
                             </motion.div>
 
-                            {/* Real Estate Card */}
                             <motion.div
                                 initial={{ opacity: 0, y: 30 }}
                                 whileInView={{ opacity: 1, y: 0 }}
@@ -679,7 +688,6 @@ const Home = () => {
                                 </div>
                             </motion.div>
 
-                            {/* International Trade Card */}
                             <motion.div
                                 initial={{ opacity: 0, y: 30 }}
                                 whileInView={{ opacity: 1, y: 0 }}
@@ -733,10 +741,10 @@ const Home = () => {
                         >
                             <div className="text-6xl mb-4">🌱</div>
                             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                                {t.cta?.title || "Ready to Grow With Us?"}
+                                {cms?.homeCtaTitle || t.cta?.title || "Ready to Grow With Us?"}
                             </h2>
                             <p className="text-xl mb-8 max-w-2xl mx-auto">
-                                {t.cta?.description || "Join the agricultural revolution in Liberia. Whether you're a farmer or investor, Track2311 is your partner in growth."}
+                                {cms?.homeCtaDescription || t.cta?.description || "Join the agricultural revolution..."}
                             </p>
                             <div className="space-x-4">
                                 <Link to="/contact" className="bg-accent text-primary px-8 py-3 rounded-lg font-semibold hover:shadow-lg transition-all inline-block transform hover:scale-105">
@@ -747,7 +755,6 @@ const Home = () => {
                     </div>
                 </section>
 
-                {/* Cookie Consent Modal */}
                 <CookieConsent />
             </div>
         </>
