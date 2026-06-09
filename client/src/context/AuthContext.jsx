@@ -14,20 +14,44 @@ export const useAuth = () => {
   return context;
 };
 
-export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      apiClient.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      const userData = JSON.parse(localStorage.getItem('user') || '{}');
-      if (userData.id) {
-        return userData;
-      }
+// Helper function to get initial user from localStorage (runs BEFORE React renders)
+function getInitialUser() {
+  const token = localStorage.getItem('token');
+  if (!token) return null;
+  
+  // Set the API header immediately
+  apiClient.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  
+  // Try to get user from localStorage
+  const userData = localStorage.getItem('user');
+  if (userData) {
+    try {
+      return JSON.parse(userData);
+    } catch (error) {
+      console.error('Error parsing user data:', error);
     }
+  }
+  
+  // If no user data, extract from token
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const userFromToken = {
+      id: payload.userId,
+      email: payload.email,
+      role: payload.role,
+      name: payload.email.split('@')[0]
+    };
+    localStorage.setItem('user', JSON.stringify(userFromToken));
+    return userFromToken;
+  } catch (error) {
+    console.error('Error extracting user from token:', error);
     return null;
-  });
+  }
+}
 
-  // Modal state
+export const AuthProvider = ({ children }) => {
+  // Initialize state with the function - this runs before rendering
+  const [user, setUser] = useState(getInitialUser);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   const openLoginModal = () => {
