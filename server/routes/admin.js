@@ -3,6 +3,10 @@ const router = express.Router();
 const Contact = require('../models/Contact');
 const Application = require('../models/Application');
 const Newsletter = require('../models/Newsletter');
+const adminAuth = require('../middleware/adminAuth'); // Assuming your middleware folder is named 'middleware'
+
+// Secure all admin routes below with the token & email check middleware
+router.use(adminAuth);
 
 // Get all contacts
 router.get('/contacts', async (req, res) => {
