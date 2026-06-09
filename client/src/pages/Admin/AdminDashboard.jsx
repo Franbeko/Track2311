@@ -230,7 +230,7 @@ const AdminDashboard = () => {
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
         <div className="text-center">
           <FaSpinner className="text-4xl text-primary animate-spin mx-auto mb-4" />
-          <p className="text-gray-600">Loading webmaster core runtime layout metrics matrices...</p>
+          <p className="text-gray-600">Loading admin dashboard...</p>
         </div>
       </div>
     );
@@ -241,8 +241,8 @@ const AdminDashboard = () => {
       <div className="bg-gradient-to-r from-primary to-secondary text-white px-4 py-6">
         <div className="flex justify-between items-center max-w-7xl mx-auto">
           <div>
-            <h1 className="text-2xl font-bold">Webmaster Management Center</h1>
-            <p className="text-sm opacity-90">Live CMS Architecture Ecosystem Enabled</p>
+            <h1 className="text-2xl font-bold">Admin Dashboard</h1>
+            <p className="text-sm opacity-90">Webmaster Management Center</p>
           </div>
           <div className="text-right">
             <p className="text-sm font-semibold">{user?.name}</p>
