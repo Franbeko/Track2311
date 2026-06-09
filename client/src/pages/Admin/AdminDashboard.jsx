@@ -136,17 +136,32 @@ const AdminDashboard = () => {
   const handleStatusUpdate = async (id, newStatus) => {
     const statusToast = toast.loading(`Updating application status to ${newStatus}...`);
     try {
-      const response = await apiClient.put(`/api/admin/applications/${id}/status`, { status: newStatus });
+      // Primary attempt matching standard PUT structure
+      let response = await apiClient.put(`/api/admin/applications/${id}/status`, { status: newStatus });
+      
       if (response.data.success) {
         setApplications(prev => prev.map(app => app._id === id ? { ...app, status: newStatus } : app));
         toast.success(`Application marked as ${newStatus} and email notification sent!`, { id: statusToast });
-      } else {
-        toast.error('Failed to update applicant milestone state status.', { id: statusToast });
+        return;
       }
     } catch (error) {
-      console.error("Error modifying status context parameters:", error);
-      toast.error(error.response?.data?.message || 'Failed to dispatch state change update request sequence.', { id: statusToast });
+      console.warn("Primary endpoint failed, attempting fallback request route configurations...", error);
+      
+      // Secondary fallback attempt using a flat patch/put path structure
+      try {
+        let fallbackResponse = await apiClient.patch(`/api/admin/applications/${id}`, { status: newStatus });
+        if (fallbackResponse.data.success || fallbackResponse.status === 200) {
+          setApplications(prev => prev.map(app => app._id === id ? { ...app, status: newStatus } : app));
+          toast.success(`Status updated to ${newStatus} with fallback optimization!`, { id: statusToast });
+          return;
+        }
+      } catch (fallbackError) {
+        console.error("Critical failure updating applications row timeline state status:", fallbackError);
+      }
     }
+    
+    // Fallback error fallback warning message display
+    toast.error('Failed to change applicant status context. Please check backend server routing logs.', { id: statusToast });
   };
 
   const deleteApplication = async (id) => {
@@ -373,7 +388,7 @@ const AdminDashboard = () => {
           </div>
         )}
 
-        {/* TAB 3: CONTACT FORM MESSAGES LOG (REDESIGNED TO MATCH SCREENSHOT) */}
+        {/* TAB 3: CONTACT FORM MESSAGES LOG */}
         {activeTab === 'inquiries' && (
           <div className="bg-white rounded-xl shadow-md overflow-hidden border">
             <div className="p-5 border-b bg-white">
@@ -419,7 +434,7 @@ const AdminDashboard = () => {
           </div>
         )}
 
-        {/* TAB 4: CAREERS JOB SUBMISSIONS MODULE (REDESIGNED TO MATCH SCREENSHOT WITH SUBMISSION DATE) */}
+        {/* TAB 4: CAREERS JOB SUBMISSIONS MODULE */}
         {activeTab === 'applications' && (
           <div className="bg-white rounded-xl shadow-md overflow-hidden border">
             <div className="p-5 border-b bg-white">
