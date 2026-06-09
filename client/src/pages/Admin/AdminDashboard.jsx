@@ -5,13 +5,29 @@ import apiClient from '../../utils/axiosConfig';
 import toast from 'react-hot-toast';
 import { 
   FaUsers, FaEnvelope, FaBriefcase, FaChartLine, 
-  FaCheckCircle, FaTrash,
-  FaSpinner, FaSignOutAlt
+  FaCheckCircle, FaTrash, FaSpinner, FaSignOutAlt
 } from 'react-icons/fa';
 
+// Helper function to get user from localStorage (runs before render)
+function getUserFromLocalStorage() {
+  const userData = localStorage.getItem('user');
+  if (userData) {
+    try {
+      return JSON.parse(userData);
+    } catch (error) {
+      console.error('Error parsing user data:', error);
+      return null;
+    }
+  }
+  return null;
+}
+
 const AdminDashboard = () => {
-  const { user, logout } = useAuth();
+  const { user: authUser, logout } = useAuth();
   const navigate = useNavigate();
+  
+  // Initialize user directly - no useEffect needed!
+  const [user] = useState(getUserFromLocalStorage() || authUser);
   
   const [activeTab, setActiveTab] = useState('overview');
   const [contacts, setContacts] = useState([]);
@@ -28,8 +44,10 @@ const AdminDashboard = () => {
   const adminEmails = ['egsmithjr@track2311investments.org', 'franciskhhaizel@gmail.com'];
   const isAdmin = user && adminEmails.includes(user.email);
 
-  // Load all data - useEffect MUST be before any conditional returns
+  // Load all data
   useEffect(() => {
+    if (!isAdmin) return;
+    
     const loadAllData = () => {
       setLoading(true);
       
@@ -45,7 +63,8 @@ const AdminDashboard = () => {
           setSubscribers(subsRes.data || []);
           setStats(statsRes.data || { totalContacts: 0, unreadContacts: 0, totalApplications: 0, totalSubscribers: 0 });
         })
-        .catch(() => {
+        .catch((error) => {
+          console.error('Error loading data:', error);
           toast.error('Failed to load data');
         })
         .finally(() => {
@@ -54,12 +73,18 @@ const AdminDashboard = () => {
     };
     
     loadAllData();
-  }, []);
+  }, [isAdmin]);
 
-  // Redirect logic AFTER all hooks
+  // Redirect logic
   if (!user) {
-    navigate('/');
-    return null;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <div className="text-center">
+          <FaSpinner className="text-4xl text-primary animate-spin mx-auto mb-4" />
+          <p className="text-gray-600">Loading user session...</p>
+        </div>
+      </div>
+    );
   }
   
   if (!isAdmin) {
@@ -225,19 +250,29 @@ const AdminDashboard = () => {
             {contacts.length === 0 ? <div className="p-12 text-center text-gray-500">No messages</div> : (
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-gray-50 border-b"><tr><th className="px-6 py-3 text-left">Name</th><th className="px-6 py-3 text-left">Email</th><th className="px-6 py-3 text-left">Message</th><th className="px-6 py-3 text-left">Date</th><th className="px-6 py-3 text-left">Actions</th></tr></thead>
-                  <tbody>{contacts.map(c => (
-                    <tr key={c._id} className={!c.isRead ? 'bg-blue-50' : ''}>
-                      <td className="px-6 py-4">{c.name}</td>
-                      <td className="px-6 py-4">{c.email}</td>
-                      <td className="px-6 py-4 max-w-xs truncate">{c.message}</td>
-                      <td className="px-6 py-4">{new Date(c.createdAt).toLocaleDateString()}</td>
-                      <td className="px-6 py-4 space-x-2">
-                        {!c.isRead && <button onClick={() => markAsRead(c._id)} className="text-green-600"><FaCheckCircle /></button>}
-                        <button onClick={() => deleteContact(c._id)} className="text-red-600"><FaTrash /></button>
-                      </td>
+                  <thead className="bg-gray-50 border-b">
+                    <tr>
+                      <th className="px-6 py-3 text-left">Name</th>
+                      <th className="px-6 py-3 text-left">Email</th>
+                      <th className="px-6 py-3 text-left">Message</th>
+                      <th className="px-6 py-3 text-left">Date</th>
+                      <th className="px-6 py-3 text-left">Actions</th>
                     </tr>
-                  ))}</tbody>
+                  </thead>
+                  <tbody>
+                    {contacts.map(c => (
+                      <tr key={c._id} className={!c.isRead ? 'bg-blue-50' : ''}>
+                        <td className="px-6 py-4">{c.name}</td>
+                        <td className="px-6 py-4">{c.email}</td>
+                        <td className="px-6 py-4 max-w-xs truncate">{c.message}</td>
+                        <td className="px-6 py-4">{new Date(c.createdAt).toLocaleDateString()}</td>
+                        <td className="px-6 py-4 space-x-2">
+                          {!c.isRead && <button onClick={() => markAsRead(c._id)} className="text-green-600"><FaCheckCircle /></button>}
+                          <button onClick={() => deleteContact(c._id)} className="text-red-600"><FaTrash /></button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
                 </table>
               </div>
             )}
@@ -251,23 +286,34 @@ const AdminDashboard = () => {
             {applications.length === 0 ? <div className="p-12 text-center text-gray-500">No applications</div> : (
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-gray-50 border-b"><tr><th className="px-6 py-3 text-left">Name</th><th className="px-6 py-3 text-left">Email</th><th className="px-6 py-3 text-left">Position</th><th className="px-6 py-3 text-left">Status</th><th className="px-6 py-3 text-left">Date</th><th className="px-6 py-3 text-left">Actions</th></tr></thead>
-                  <tbody>{applications.map(a => (
-                    <tr key={a._id}>
-                      <td className="px-6 py-4">{a.fullName}</td>
-                      <td className="px-6 py-4">{a.email}</td>
-                      <td className="px-6 py-4">{a.jobTitle}</td>
-                      <td className="px-6 py-4">
-                        <select value={a.status || 'pending'} onChange={(e) => updateStatus(a._id, e.target.value)} className="text-xs px-2 py-1 rounded-full bg-yellow-100">
-                          <option value="pending">Pending</option>
-                          <option value="approved">Approved</option>
-                          <option value="rejected">Rejected</option>
-                        </select>
-                      </td>
-                      <td className="px-6 py-4">{new Date(a.createdAt).toLocaleDateString()}</td>
-                      <td className="px-6 py-4"><button onClick={() => deleteApplication(a._id)} className="text-red-600"><FaTrash /></button></td>
+                  <thead className="bg-gray-50 border-b">
+                    <tr>
+                      <th className="px-6 py-3 text-left">Name</th>
+                      <th className="px-6 py-3 text-left">Email</th>
+                      <th className="px-6 py-3 text-left">Position</th>
+                      <th className="px-6 py-3 text-left">Status</th>
+                      <th className="px-6 py-3 text-left">Date</th>
+                      <th className="px-6 py-3 text-left">Actions</th>
                     </tr>
-                  ))}</tbody>
+                  </thead>
+                  <tbody>
+                    {applications.map(a => (
+                      <tr key={a._id}>
+                        <td className="px-6 py-4">{a.fullName}</td>
+                        <td className="px-6 py-4">{a.email}</td>
+                        <td className="px-6 py-4">{a.jobTitle}</td>
+                        <td className="px-6 py-4">
+                          <select value={a.status || 'pending'} onChange={(e) => updateStatus(a._id, e.target.value)} className="text-xs px-2 py-1 rounded-full bg-yellow-100">
+                            <option value="pending">Pending</option>
+                            <option value="approved">Approved</option>
+                            <option value="rejected">Rejected</option>
+                          </select>
+                        </td>
+                        <td className="px-6 py-4">{new Date(a.createdAt).toLocaleDateString()}</td>
+                        <td className="px-6 py-4"><button onClick={() => deleteApplication(a._id)} className="text-red-600"><FaTrash /></button></td>
+                      </tr>
+                    ))}
+                  </tbody>
                 </table>
               </div>
             )}
@@ -281,14 +327,22 @@ const AdminDashboard = () => {
             {subscribers.length === 0 ? <div className="p-12 text-center text-gray-500">No subscribers</div> : (
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-gray-50 border-b"><tr><th className="px-6 py-3 text-left">Email</th><th className="px-6 py-3 text-left">Date</th><th className="px-6 py-3 text-left">Actions</th></tr></thead>
-                  <tbody>{subscribers.map(s => (
-                    <tr key={s._id}>
-                      <td className="px-6 py-4">{s.email}</td>
-                      <td className="px-6 py-4">{new Date(s.subscribedAt).toLocaleDateString()}</td>
-                      <td className="px-6 py-4"><button onClick={() => deleteSubscriber(s._id)} className="text-red-600"><FaTrash /></button></td>
+                  <thead className="bg-gray-50 border-b">
+                    <tr>
+                      <th className="px-6 py-3 text-left">Email</th>
+                      <th className="px-6 py-3 text-left">Date</th>
+                      <th className="px-6 py-3 text-left">Actions</th>
                     </tr>
-                  ))}</tbody>
+                  </thead>
+                  <tbody>
+                    {subscribers.map(s => (
+                      <tr key={s._id}>
+                        <td className="px-6 py-4">{s.email}</td>
+                        <td className="px-6 py-4">{new Date(s.subscribedAt).toLocaleDateString()}</td>
+                        <td className="px-6 py-4"><button onClick={() => deleteSubscriber(s._id)} className="text-red-600"><FaTrash /></button></td>
+                      </tr>
+                    ))}
+                  </tbody>
                 </table>
               </div>
             )}
