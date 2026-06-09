@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/useAuth';
+import { useAuth } from '../../context/AuthContext';
 import apiClient from '../../utils/axiosConfig';
 import toast from 'react-hot-toast';
 import { 
@@ -21,9 +21,9 @@ const AdminDashboard = () => {
   const adminEmails = ['egsmithjr@track2311investments.org', 'franciskhhaizel@gmail.com'];
   const isAdmin = user && adminEmails.includes(user.email);
 
-  // Clean initialization: Only default loading to true if we actually have a logged-in admin
+  // Fix: Set loading state immediately based on initial auth validation status
   const [loading, setLoading] = useState(!!(user && isAdmin));
-
+  
   const [stats, setStats] = useState({
     totalContacts: 0,
     totalApplications: 0,
@@ -31,25 +31,32 @@ const AdminDashboard = () => {
     unreadContacts: 0
   });
 
-  // 1. Safety Redirection Guard inside useEffect
-  useEffect(() => {
-    if (!loading) {
-      if (!user) {
-        navigate('/');
-      } else if (!isAdmin) {
-        toast.error('Access denied. Admin only.');
-        navigate('/');
-      }
-    }
-  }, [user, isAdmin, loading, navigate]);
+  // Diagnostic Logs - Viewable in the browser Inspect element console
+  console.log("=== ADMIN DASHBOARD DEBUG METRICS ===");
+  console.log("Active Session User:", user);
+  console.log("Admin Match Validation Status:", isAdmin);
 
-  // 2. Data Fetching Effect - Linter warning completely resolved
+  // 1. Handle Navigation Redirect Safely
   useEffect(() => {
-    // If there's no valid admin user session, bypass the API call
+    if (!user) {
+      console.warn("No session context found, redirecting safely to home.");
+      navigate('/');
+    } else if (!isAdmin) {
+      console.warn(`Unauthorized access attempt by: ${user.email}. Denied.`);
+      toast.error('Access denied. Admin only.');
+      navigate('/');
+    }
+  }, [user, isAdmin, navigate]);
+
+  // 2. Main API Processing Loop - Warning Cleared!
+  useEffect(() => {
+    // If the session isn't an authorized admin, do nothing. 
+    // Loading is already false from our initial state calculation above.
     if (!user || !isAdmin) return;
 
     const loadAllData = () => {
       setLoading(true);
+      console.log("Attempting backend calls to Dokploy API layer...");
       
       Promise.all([
         apiClient.get('/api/admin/contacts'),
@@ -58,14 +65,17 @@ const AdminDashboard = () => {
         apiClient.get('/api/admin/stats')
       ])
         .then(([contactsRes, appsRes, subsRes, statsRes]) => {
+          console.log("API Response payload returned successfully!");
           setContacts(contactsRes?.data || []);
           setApplications(appsRes?.data || []);
           setSubscribers(subsRes?.data || []);
           setStats(statsRes?.data || { totalContacts: 0, unreadContacts: 0, totalApplications: 0, totalSubscribers: 0 });
         })
         .catch((err) => {
-          console.error("Dashboard Fetch Error: ", err);
-          toast.error('Failed to load dashboard data');
+          console.error("CRITICAL DASHBOARD DATA RETRIEVAL FAILURE:", err);
+          console.error("Server Status Response:", err?.response?.status);
+          console.error("Server Error Payload:", err?.response?.data);
+          toast.error(`Failed to load server data: ${err?.response?.data?.message || err.message}`);
         })
         .finally(() => {
           setLoading(false);
@@ -87,8 +97,9 @@ const AdminDashboard = () => {
       setContacts(contacts.map(c => c._id === id ? { ...c, isRead: true } : c));
       setStats(prev => ({ ...prev, unreadContacts: Math.max(0, prev.unreadContacts - 1) }));
       toast.success('Marked as read');
-    } catch {
-      toast.error('Failed to mark as read');
+    } catch (err) {
+      console.error("Action failed:", err);
+      toast.error('Failed to update status');
     }
   };
 
@@ -98,8 +109,9 @@ const AdminDashboard = () => {
       await apiClient.delete(`/api/admin/contacts/${id}`);
       setContacts(contacts.filter(c => c._id !== id));
       toast.success('Deleted');
-    } catch {
-      toast.error('Failed to delete');
+    } catch (err) {
+      console.error("Action failed:", err);
+      toast.error('Failed to delete contact');
     }
   };
 
@@ -108,8 +120,9 @@ const AdminDashboard = () => {
       await apiClient.put(`/api/admin/applications/${id}/status`, { status: newStatus });
       setApplications(applications.map(a => a._id === id ? { ...a, status: newStatus } : a));
       toast.success(`Status updated to: ${newStatus}`);
-    } catch {
-      toast.error('Failed to update status');
+    } catch (err) {
+      console.error("Action failed:", err);
+      toast.error('Failed to alter registration status');
     }
   };
 
@@ -119,8 +132,9 @@ const AdminDashboard = () => {
       await apiClient.delete(`/api/admin/applications/${id}`);
       setApplications(applications.filter(a => a._id !== id));
       toast.success('Deleted');
-    } catch {
-      toast.error('Failed to delete application');
+    } catch (err) {
+      console.error("Action failed:", err);
+      toast.error('Failed to purge submission');
     }
   };
 
@@ -130,8 +144,9 @@ const AdminDashboard = () => {
       await apiClient.delete(`/api/admin/newsletter/${id}`);
       setSubscribers(subscribers.filter(s => s._id !== id));
       toast.success('Removed');
-    } catch {
-      toast.error('Failed to remove subscriber');
+    } catch (err) {
+      console.error("Action failed:", err);
+      toast.error('Failed to scrub marketing listing');
     }
   };
 
@@ -140,15 +155,21 @@ const AdminDashboard = () => {
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
         <div className="text-center">
           <FaSpinner className="text-4xl text-primary animate-spin mx-auto mb-4" />
-          <p className="text-gray-600">Loading dashboard...</p>
+          <p className="text-gray-600">Loading dashboard data modules...</p>
         </div>
       </div>
     );
   }
 
-  // Final rendering protection guard
   if (!user || !isAdmin) {
-    return null;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <div className="text-center p-8 bg-white rounded-xl shadow-lg">
+          <p className="text-red-500 font-bold text-lg mb-2">Access Unauthorized</p>
+          <p className="text-gray-500 text-sm">Transferring back to authorization window...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -192,10 +213,9 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      {/* Content Body */}
+      {/* Content */}
       <div className="max-w-7xl mx-auto px-4 py-8">
-        
-        {/* Overview Tab */}
+        {/* Overview */}
         {activeTab === 'overview' && (
           <div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -221,7 +241,7 @@ const AdminDashboard = () => {
             </div>
             <div className="bg-white rounded-xl p-6 shadow-md">
               <h2 className="text-xl font-bold mb-4">Recent Messages</h2>
-              {!contacts || contacts.length === 0 ? <p className="text-gray-500">No messages</p> : contacts.slice(0, 5).map(c => (
+              {!contacts || contacts.length === 0 ? <p className="text-gray-500">No messages found</p> : contacts.slice(0, 5).map(c => (
                 <div key={c._id} className="flex justify-between items-center p-3 border-b">
                   <div><p className="font-semibold">{c.name}</p><p className="text-sm text-gray-500">{c.email}</p></div>
                   {!c.isRead && <span className="text-xs bg-red-100 text-red-600 px-2 py-1 rounded">New</span>}
@@ -231,7 +251,7 @@ const AdminDashboard = () => {
           </div>
         )}
 
-        {/* Contacts Tab */}
+        {/* Contacts */}
         {activeTab === 'contacts' && (
           <div className="bg-white rounded-xl shadow-md overflow-hidden">
             <div className="p-6 border-b bg-gray-50"><h2 className="text-xl font-bold">Contact Messages</h2></div>
@@ -267,7 +287,7 @@ const AdminDashboard = () => {
           </div>
         )}
 
-        {/* Applications Tab */}
+        {/* Applications */}
         {activeTab === 'applications' && (
           <div className="bg-white rounded-xl shadow-md overflow-hidden">
             <div className="p-6 border-b bg-gray-50"><h2 className="text-xl font-bold">Job Applications</h2></div>
@@ -310,7 +330,7 @@ const AdminDashboard = () => {
           </div>
         )}
 
-        {/* Subscribers Tab */}
+        {/* Subscribers */}
         {activeTab === 'subscribers' && (
           <div className="bg-white rounded-xl shadow-md overflow-hidden">
             <div className="p-6 border-b bg-gray-50"><h2 className="text-xl font-bold">Newsletter Subscribers</h2></div>
