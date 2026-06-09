@@ -6,11 +6,11 @@ import toast from 'react-hot-toast';
 import { 
   FaUsers, FaEnvelope, FaBriefcase, FaChartLine, 
   FaCheckCircle, FaTrash, FaUserCircle,
-  FaEye, FaSpinner
+  FaEye, FaSpinner, FaSignOutAlt
 } from 'react-icons/fa';
 
 const AdminDashboard = () => {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
   
   // All Hooks MUST be called before any conditional returns
@@ -66,6 +66,12 @@ const AdminDashboard = () => {
       loadData();
     }
   }, []); // Empty dependency array - runs once on mount
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+    toast.success('Logged out successfully');
+  };
 
   // Handle redirects AFTER all hooks (but before rendering content)
   if (!user) {
@@ -197,6 +203,12 @@ const AdminDashboard = () => {
                   <p className="text-xs opacity-75">{user?.email}</p>
                 </div>
               </div>
+              <button
+                onClick={handleLogout}
+                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition"
+              >
+                <FaSignOutAlt /> Logout
+              </button>
             </div>
           </div>
         </div>
