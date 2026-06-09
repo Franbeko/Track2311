@@ -13,11 +13,31 @@ const app = express();
 // Get frontend URL from environment variable
 const frontendUrl = process.env.FRONTEND_URL || 'https://track2311investments.org';
 
-// Middleware - Allow both production and development origins
+// Dynamic, secure CORS array layout matching your staging/prod endpoints
+const allowedOrigins = [
+  frontendUrl,
+  'https://track2311investments.org',
+  'https://www.track2311investments.org',
+  'http://localhost:5173',
+  'http://localhost:3000'
+];
+
+// Middleware - Robust CORS Configuration
 app.use(cors({
-  origin: [frontendUrl, 'https://www.track2311investments.org', 'http://localhost:5173', 'http://localhost:3000'],
+  origin: function (origin, callback) {
+    // Allow server-to-server requests or tools like Postman (where origin is undefined)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.warn(`Blocked by CORS policy for origin: ${origin}`);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -47,10 +67,6 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// --- IMPORTANT: Remove the old static file serving code ---
-// The code that was here previously has been removed because
-// the frontend is now hosted on Vercel, not on this server.
-
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
@@ -63,6 +79,6 @@ app.use((err, req, res, next) => {
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`📝 API URL: http://localhost:${PORT}/api/test`);
+  console.log(`¼ API URL: http://localhost:${PORT}/api/test`);
   console.log(`🌐 Frontend URL: ${frontendUrl}`);
 });

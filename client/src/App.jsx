@@ -35,6 +35,7 @@ const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
 const ResetPassword = lazy(() => import('./pages/ResetPassword'));
 const Careers = lazy(() => import('./pages/Careers'));
 const AuthSuccess = lazy(() => import('./pages/AuthSuccess'));
+const AdminDashboard = lazy(() => import('./pages/Admin/AdminDashboard'));
 
 // Loading component
 const PageLoader = () => (
@@ -80,6 +81,7 @@ const AppContent = () => {
             <Route path="/careers" element={<Careers />} />
             <Route path="/account" element={<Account />} />
             <Route path="/auth-success" element={<AuthSuccess />} />
+            <Route path="/admin" element={<AdminDashboard />} />
             
             {/* Redirect login and register to home */}
             <Route path="/login" element={<Navigate to="/" replace />} />

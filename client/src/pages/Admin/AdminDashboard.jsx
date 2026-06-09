@@ -10,7 +10,7 @@ import {
 } from 'react-icons/fa';
 
 const AdminDashboard = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, openLoginModal } = useAuth();
   const navigate = useNavigate();
   
   const [activeTab, setActiveTab] = useState('overview');
@@ -21,7 +21,8 @@ const AdminDashboard = () => {
   const adminEmails = ['egsmithjr@track2311investments.org', 'franciskhhaizel@gmail.com'];
   const isAdmin = user && adminEmails.includes(user.email);
 
-  // Fix: Set loading state immediately based on initial auth validation status
+  // FIX: This initializes loading to true ONLY if there is a valid logged-in admin.
+  // If there is no user, it initializes to false immediately, preventing the linter warning entirely.
   const [loading, setLoading] = useState(!!(user && isAdmin));
   
   const [stats, setStats] = useState({
@@ -31,32 +32,22 @@ const AdminDashboard = () => {
     unreadContacts: 0
   });
 
-  // Diagnostic Logs - Viewable in the browser Inspect element console
-  console.log("=== ADMIN DASHBOARD DEBUG METRICS ===");
-  console.log("Active Session User:", user);
-  console.log("Admin Match Validation Status:", isAdmin);
-
   // 1. Handle Navigation Redirect Safely
   useEffect(() => {
-    if (!user) {
-      console.warn("No session context found, redirecting safely to home.");
-      navigate('/');
-    } else if (!isAdmin) {
-      console.warn(`Unauthorized access attempt by: ${user.email}. Denied.`);
+    if (user && !isAdmin) {
       toast.error('Access denied. Admin only.');
       navigate('/');
     }
   }, [user, isAdmin, navigate]);
 
-  // 2. Main API Processing Loop - Warning Cleared!
+  // 2. Main API Processing Loop - WARNING COMPLETELY RESOLVED
   useEffect(() => {
     // If the session isn't an authorized admin, do nothing. 
-    // Loading is already false from our initial state calculation above.
+    // Loading is already false from our initial state assignment above, so no setLoading(false) is needed here!
     if (!user || !isAdmin) return;
 
     const loadAllData = () => {
       setLoading(true);
-      console.log("Attempting backend calls to Dokploy API layer...");
       
       Promise.all([
         apiClient.get('/api/admin/contacts'),
@@ -65,17 +56,14 @@ const AdminDashboard = () => {
         apiClient.get('/api/admin/stats')
       ])
         .then(([contactsRes, appsRes, subsRes, statsRes]) => {
-          console.log("API Response payload returned successfully!");
           setContacts(contactsRes?.data || []);
           setApplications(appsRes?.data || []);
           setSubscribers(subsRes?.data || []);
           setStats(statsRes?.data || { totalContacts: 0, unreadContacts: 0, totalApplications: 0, totalSubscribers: 0 });
         })
         .catch((err) => {
-          console.error("CRITICAL DASHBOARD DATA RETRIEVAL FAILURE:", err);
-          console.error("Server Status Response:", err?.response?.status);
-          console.error("Server Error Payload:", err?.response?.data);
-          toast.error(`Failed to load server data: ${err?.response?.data?.message || err.message}`);
+          console.error("API Fetch Error:", err);
+          toast.error(`Failed to load server data: ${err?.response?.data?.message || 'Network Error'}`);
         })
         .finally(() => {
           setLoading(false);
@@ -97,9 +85,8 @@ const AdminDashboard = () => {
       setContacts(contacts.map(c => c._id === id ? { ...c, isRead: true } : c));
       setStats(prev => ({ ...prev, unreadContacts: Math.max(0, prev.unreadContacts - 1) }));
       toast.success('Marked as read');
-    } catch (err) {
-      console.error("Action failed:", err);
-      toast.error('Failed to update status');
+    } catch {
+      toast.error('Failed to update message status');
     }
   };
 
@@ -109,8 +96,7 @@ const AdminDashboard = () => {
       await apiClient.delete(`/api/admin/contacts/${id}`);
       setContacts(contacts.filter(c => c._id !== id));
       toast.success('Deleted');
-    } catch (err) {
-      console.error("Action failed:", err);
+    } catch {
       toast.error('Failed to delete contact');
     }
   };
@@ -120,9 +106,8 @@ const AdminDashboard = () => {
       await apiClient.put(`/api/admin/applications/${id}/status`, { status: newStatus });
       setApplications(applications.map(a => a._id === id ? { ...a, status: newStatus } : a));
       toast.success(`Status updated to: ${newStatus}`);
-    } catch (err) {
-      console.error("Action failed:", err);
-      toast.error('Failed to alter registration status');
+    } catch {
+      toast.error('Failed to change application status');
     }
   };
 
@@ -132,9 +117,8 @@ const AdminDashboard = () => {
       await apiClient.delete(`/api/admin/applications/${id}`);
       setApplications(applications.filter(a => a._id !== id));
       toast.success('Deleted');
-    } catch (err) {
-      console.error("Action failed:", err);
-      toast.error('Failed to purge submission');
+    } catch {
+      toast.error('Failed to delete application');
     }
   };
 
@@ -144,12 +128,12 @@ const AdminDashboard = () => {
       await apiClient.delete(`/api/admin/newsletter/${id}`);
       setSubscribers(subscribers.filter(s => s._id !== id));
       toast.success('Removed');
-    } catch (err) {
-      console.error("Action failed:", err);
-      toast.error('Failed to scrub marketing listing');
+    } catch {
+      toast.error('Failed to remove subscriber');
     }
   };
 
+  // State A: Component background processing spinner
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -161,12 +145,32 @@ const AdminDashboard = () => {
     );
   }
 
+  // State B: Missing Credentials Fallback
   if (!user || !isAdmin) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <div className="text-center p-8 bg-white rounded-xl shadow-lg">
-          <p className="text-red-500 font-bold text-lg mb-2">Access Unauthorized</p>
-          <p className="text-gray-500 text-sm">Transferring back to authorization window...</p>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+        <div className="max-w-md w-full text-center bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
+          <div className="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span className="text-2xl font-bold">🔒</span>
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Admin Portal Locked</h2>
+          <p className="text-gray-500 mb-6 text-sm">
+            You must be signed in with an authorized corporate administrative account to access these system data logs.
+          </p>
+          <div className="flex flex-col gap-3">
+            <button 
+              onClick={openLoginModal} 
+              className="w-full bg-primary hover:bg-secondary text-white font-semibold py-3 px-4 rounded-xl shadow-md transition-all duration-200"
+            >
+              Sign In to Management Console
+            </button>
+            <button 
+              onClick={() => navigate('/')} 
+              className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-xl transition-all duration-200 text-sm"
+            >
+              Return Home
+            </button>
+          </div>
         </div>
       </div>
     );
