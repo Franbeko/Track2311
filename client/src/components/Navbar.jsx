@@ -55,6 +55,7 @@ const Navbar = () => {
   return (
     <>
       {/* Top Bar with Contact Info */}
+      {/* HIDDEN ON MOBILE (via hidden md:block) */}
       <div className="bg-primary text-white py-3 hidden md:block border-b border-accent/20">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center">
@@ -164,7 +165,7 @@ const Navbar = () => {
 
             {/* Right Side: Language Selector + Auth Buttons */}
             <div className="hidden lg:flex items-center space-x-4">
-              {/* Language Selector Dropdown */}
+              {/* Language Selector Dropdown - Desktop Only */}
               <div className="relative">
                 <button
                   onClick={() => setIsLanguageOpen(!isLanguageOpen)}
@@ -196,22 +197,19 @@ const Navbar = () => {
                 )}
               </div>
 
-              {/* Auth Buttons - Separate for Admin and Regular Users */}
+              {/* Auth Buttons */}
               {user ? (
                 <>
-                  {/* Show Admin Dashboard ONLY for admin users */}
                   {isAdmin && (
                     <Link to="/admin" className="text-gray-700 hover:text-primary font-medium transition-colors">
                       Admin Dashboard
                     </Link>
                   )}
-                  {/* Show My Account ONLY for regular (non-admin) users */}
                   {isRegularUser && (
                     <Link to="/account" className="text-gray-700 hover:text-primary font-medium transition-colors">
                       My Account
                     </Link>
                   )}
-                  {/* Logout button for both */}
                   <button onClick={handleLogout} className="bg-red-600 text-white px-5 py-2 rounded-lg hover:bg-red-700 transition-all font-medium">
                     {t.nav?.logout || 'Logout'}
                   </button>
@@ -285,46 +283,21 @@ const Navbar = () => {
                 {t.nav?.contact || 'Contact'}
               </Link>
               
-              {/* Mobile Language Selector */}
-              <div className="pt-2 border-t border-gray-100">
-                <div className="flex items-center gap-2 mb-2">
-                  <FaGlobe className="text-primary" />
-                  <span className="text-sm font-semibold text-gray-700">Select Language</span>
-                </div>
-                <div className="grid grid-cols-2 gap-2">
-                  {languages.map((lang) => (
-                    <button
-                      key={lang.code}
-                      onClick={() => handleLanguageChange(lang.code)}
-                      className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors ${
-                        language === lang.code
-                          ? 'bg-primary text-white'
-                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                      }`}
-                    >
-                      <span>{lang.flag}</span>
-                      <span>{lang.code.toUpperCase()}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
+              {/* REMOVED: Mobile Language Selector Block has been hidden entirely */}
               
               {/* Mobile Auth Buttons */}
               {user ? (
                 <>
-                  {/* Show Admin Dashboard ONLY for admin users */}
                   {isAdmin && (
                     <Link to="/admin" className="block text-gray-700 hover:text-primary py-2" onClick={() => setIsOpen(false)}>
                       Admin Dashboard
                     </Link>
                   )}
-                  {/* Show My Account ONLY for regular (non-admin) users */}
                   {isRegularUser && (
                     <Link to="/account" className="block text-gray-700 hover:text-primary py-2" onClick={() => setIsOpen(false)}>
                       My Account
                     </Link>
                   )}
-                  {/* Logout button for both */}
                   <button onClick={() => { handleLogout(); setIsOpen(false); }} className="block w-full text-left text-red-600 py-2 font-medium">
                     {t.nav?.logout || 'Logout'}
                   </button>
@@ -344,7 +317,7 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* Login Modal - Only allowed on homepage */}
+      {/* Login Modal */}
       <LoginModal 
         isOpen={isLoginModalOpen}
         onClose={() => setIsLoginModalOpen(false)}

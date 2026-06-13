@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import apiClient from '../../utils/axiosConfig';
 import toast from 'react-hot-toast';
 import { 
-  FaEnvelope, FaBriefcase, FaChartLine, 
+  FaEnvelope, FaChartLine, 
   FaTrash, FaSpinner, FaEdit, FaSave, FaUserShield, FaLock, FaKey, FaList, FaCheck 
 } from 'react-icons/fa';
 
@@ -73,8 +73,8 @@ const AdminDashboard = () => {
         if (contentRes?.data) setSiteContent(prev => ({ ...prev, ...contentRes.data }));
         setStats(statsRes?.data || { totalContacts: 0, unreadContacts: 0, totalApplications: 0, totalSubscribers: 0, totalUsers: 0 });
       } catch (err) {
-        console.error("Dashboard async ingestion chain failure:", err);
-        toast.error('Failed to parse secure components data stack layer.');
+        console.error("Dashboard data sync failure:", err);
+        toast.error('Could not load dashboard data. Ensure backend is running.');
       } finally {
         setLoading(false);
       }
@@ -130,61 +130,6 @@ const AdminDashboard = () => {
       toast.error(err.response?.data?.message || 'The authorization module returned an access token update rejection anomaly.');
     } finally {
       setIsChangingPassword(false);
-    }
-  };
-
-  const handleStatusUpdate = async (id, newStatus) => {
-    // Optimistically update frontend table immediately so the selection switches fluidly
-    setApplications(prev => prev.map(app => app._id === id ? { ...app, status: newStatus } : app));
-    
-    const statusToast = toast.loading(`Processing application status update to ${newStatus}...`);
-    
-    // Route Option 1: PUT /api/admin/applications/:id/status
-    try {
-      const res1 = await apiClient.put(`/api/admin/applications/${id}/status`, { status: newStatus });
-      if (res1.data.success) {
-        toast.success(`Application marked as ${newStatus} and email notification sent!`, { id: statusToast });
-        return;
-      }
-    } catch {
-      console.warn("Route 1 failed, trying Route 2...");
-    }
-
-    // Route Option 2: PATCH /api/admin/applications/:id
-    try {
-      const res2 = await apiClient.patch(`/api/admin/applications/${id}`, { status: newStatus });
-      if (res2.data.success || res2.status === 200) {
-        toast.success(`Status safely updated to ${newStatus}!`, { id: statusToast });
-        return;
-      }
-    } catch {
-      console.warn("Route 2 failed, trying Route 3...");
-    }
-
-    // Route Option 3: PATCH /api/applications/:id
-    try {
-      const res3 = await apiClient.patch(`/api/applications/${id}`, { status: newStatus });
-      if (res3.data.success || res3.status === 200) {
-        toast.success(`Status updated to ${newStatus} globally!`, { id: statusToast });
-        return;
-      }
-    } catch (err3) {
-      console.error("All explicit application status endpoints returned a structural exception rejection handling error:", err3);
-    }
-
-    // Fallback safe update completion if backend intercepts live endpoints
-    toast.dismiss(statusToast);
-    toast.success(`Status display updated locally to ${newStatus}! (Configure backend email routes to go live)`);
-  };
-
-  const deleteApplication = async (id) => {
-    if (!window.confirm('Delete this application entry permanently?')) return;
-    try {
-      await apiClient.delete(`/api/admin/applications/${id}`);
-      setApplications(prev => prev.filter(app => app._id !== id));
-      toast.success('Application entry purged.');
-    } catch {
-      toast.error('Failed to drop targeted application record.');
     }
   };
 
@@ -257,7 +202,6 @@ const AdminDashboard = () => {
           <button onClick={() => setActiveTab('cms')} className={`px-5 py-3 font-semibold whitespace-nowrap ${activeTab === 'cms' ? 'border-b-2 border-primary text-primary' : 'text-gray-500'}`}><FaEdit className="inline mr-1" /> Master CMS Platform Text</button>
           <button onClick={() => setActiveTab('users')} className={`px-5 py-3 font-semibold whitespace-nowrap ${activeTab === 'users' ? 'border-b-2 border-primary text-primary' : 'text-gray-500'}`}><FaUserShield className="inline mr-1" /> System Accounts ({users.length})</button>
           <button onClick={() => setActiveTab('inquiries')} className={`px-5 py-3 font-semibold whitespace-nowrap ${activeTab === 'inquiries' ? 'border-b-2 border-primary text-primary' : 'text-gray-500'}`}><FaEnvelope className="inline mr-1" /> Inquiries ({contacts.length})</button>
-          <button onClick={() => setActiveTab('applications')} className={`px-5 py-3 font-semibold whitespace-nowrap ${activeTab === 'applications' ? 'border-b-2 border-primary text-primary' : 'text-gray-500'}`}><FaBriefcase className="inline mr-1" /> Applications Log</button>
           <button onClick={() => setActiveTab('subscribers')} className={`px-5 py-3 font-semibold whitespace-nowrap ${activeTab === 'subscribers' ? 'border-b-2 border-primary text-primary' : 'text-gray-500'}`}><FaList className="inline mr-1" /> Subscribers</button>
           <button onClick={() => setActiveTab('security')} className={`px-5 py-3 font-semibold whitespace-nowrap ${activeTab === 'security' ? 'border-b-2 border-primary text-primary' : 'text-gray-500'}`}><FaLock className="inline mr-1" /> Security</button>
         </div>
@@ -437,71 +381,6 @@ const AdminDashboard = () => {
                               <FaTrash />
                             </button>
                           </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* TAB 4: CAREERS JOB SUBMISSIONS MODULE */}
-        {activeTab === 'applications' && (
-          <div className="bg-white rounded-xl shadow-md overflow-hidden border">
-            <div className="p-5 border-b bg-white">
-              <h2 className="text-xl font-bold text-gray-900">Careers Job Submissions Logging Module</h2>
-            </div>
-            {applications.length === 0 ? (
-              <p className="p-6 text-sm text-gray-500">No job submissions logged yet.</p>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm text-left">
-                  <thead className="bg-gray-50 border-b text-xs font-bold text-gray-900 uppercase">
-                    <tr>
-                      <th className="px-6 py-4">Applicant Name</th>
-                      <th className="px-6 py-4">Email Address</th>
-                      <th className="px-6 py-4">Target Career Title</th>
-                      <th className="px-6 py-4">Review Status</th>
-                      <th className="px-6 py-4">Submission Date</th>
-                      <th className="px-6 py-4">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y text-gray-600 bg-white">
-                    {applications.map((app) => (
-                      <tr key={app._id} className="hover:bg-gray-50 border-b transition-colors">
-                        <td className="px-6 py-4 font-semibold text-gray-900 whitespace-nowrap">
-                          {app.fullName}
-                        </td>
-                        <td className="px-6 py-4 text-gray-500 whitespace-nowrap">
-                          {app.email}
-                        </td>
-                        <td className="px-6 py-4 font-semibold text-green-700 whitespace-nowrap">
-                          {app.jobTitle}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <select
-                            value={app.status || 'Pending'}
-                            onChange={(e) => handleStatusUpdate(app._id, e.target.value)}
-                            className={`px-2 py-1.5 border rounded-lg font-semibold text-xs focus:outline-none focus:ring-1 focus:ring-primary rounded-md cursor-pointer ${
-                              app.status === 'Approved' ? 'bg-green-100 text-green-800 border-green-300' :
-                              app.status === 'Rejected' ? 'bg-red-100 text-red-800 border-red-300' :
-                              'bg-yellow-100 text-yellow-800 border-yellow-300'
-                            }`}
-                          >
-                            <option value="Pending">Pending</option>
-                            <option value="Approved">Approved</option>
-                            <option value="Rejected">Rejected</option>
-                          </select>
-                        </td>
-                        <td className="px-6 py-4 text-gray-500 whitespace-nowrap">
-                          {formatDateString(app.createdAt)}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <button onClick={() => deleteApplication(app._id)} className="text-red-500 hover:text-red-700 transition-colors">
-                            <FaTrash />
-                          </button>
                         </td>
                       </tr>
                     ))}

@@ -21,7 +21,8 @@ router.post('/', async (req, res) => {
       linkedin,
       portfolio,
       jobTitle,
-      jobLocation
+      jobLocation,
+      status: 'pending'
     });
     
     await application.save();
@@ -62,54 +63,43 @@ router.post('/', async (req, res) => {
                 <div class="label">Position:</div>
                 <div class="value"><span class="badge">${jobTitle}</span> - ${jobLocation || 'Not specified'}</div>
               </div>
-              
               <div class="field">
                 <div class="label">Applicant Name:</div>
                 <div class="value">${fullName}</div>
               </div>
-              
               <div class="field">
                 <div class="label">Email:</div>
                 <div class="value"><a href="mailto:${email}">${email}</a></div>
               </div>
-              
               <div class="field">
                 <div class="label">Phone:</div>
                 <div class="value">${phone || 'Not provided'}</div>
               </div>
-              
               <div class="field">
                 <div class="label">Location:</div>
                 <div class="value">${location || 'Not provided'}</div>
               </div>
-              
               <div class="field">
                 <div class="label">Education:</div>
                 <div class="value">${education}</div>
               </div>
-              
               <div class="field">
                 <div class="label">LinkedIn:</div>
                 <div class="value">${linkedin ? `<a href="${linkedin}">${linkedin}</a>` : 'Not provided'}</div>
               </div>
-              
               <div class="field">
                 <div class="label">Portfolio:</div>
                 <div class="value">${portfolio ? `<a href="${portfolio}">${portfolio}</a>` : 'Not provided'}</div>
               </div>
-              
               <div class="field">
                 <div class="label">Cover Letter:</div>
                 <div class="value">${coverLetter.replace(/\n/g, '<br>')}</div>
               </div>
-              
               <hr>
-              
               <div class="field">
                 <div class="label">📅 Submitted:</div>
                 <div class="value">${new Date().toLocaleString()}</div>
               </div>
-              
               <div class="field">
                 <div class="label">📄 Application ID:</div>
                 <div class="value">${application._id}</div>
@@ -151,35 +141,22 @@ router.post('/', async (req, res) => {
             </div>
             <div class="content">
               <p>Dear <strong>${fullName}</strong>,</p>
-              
               <p>Thank you for applying for the <strong>${jobTitle}</strong> position at Track2311 Investment and Consultancy.</p>
-              
               <div class="highlight">
                 <p><strong>📋 Application Summary:</strong></p>
                 <p><strong>Position:</strong> ${jobTitle}</p>
                 <p><strong>Application ID:</strong> ${application._id}</p>
                 <p><strong>Submitted:</strong> ${new Date().toLocaleString()}</p>
               </div>
-              
               <p><strong>⏱️ What to expect:</strong></p>
               <ul>
                 <li>Our HR team will review your application within 5-7 business days</li>
                 <li>If shortlisted, you will be contacted for an interview</li>
                 <li>You will receive updates via email</li>
               </ul>
-              
-              <p><strong>📞 In the meantime:</strong></p>
-              <ul>
-                <li>Visit our <a href="https://track2311investments.org/team" style="color: #1B5E20;">Team page</a> to learn more about our agricultural experts</li>
-                <li>Follow us on social media for company updates</li>
-                <li>Reply to this email if you have any questions</li>
-              </ul>
-              
               <p>Thank you for your interest in joining our agricultural team!</p>
-              
               <p>Best regards,<br>
-              <strong>Track2311 HR Team</strong><br>
-              <em>Empowering Liberian Farmers, Connecting Global Markets</em></p>
+              <strong>Track2311 HR Team</strong></p>
             </div>
             <div class="footer">
               <p>© ${new Date().getFullYear()} Track2311 Investment and Consultancy | Monrovia, Liberia</p>
@@ -198,7 +175,68 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Get all applications (for future admin dashboard)
+// NEW ENDPOINT: Update application status & dispatch automated candidate emails
+router.put('/:id/status', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body; // Frontend sends 'Pending', 'Approved', or 'Rejected'
+
+    // Map capitalized frontend values to database lowercase schema configurations
+    let dbStatus = 'pending';
+    if (status === 'Approved') dbStatus = 'accepted';
+    if (status === 'Rejected') dbStatus = 'rejected';
+    if (status === 'Pending') dbStatus = 'pending';
+
+    const application = await Application.findByIdAndUpdate(
+      id,
+      { status: dbStatus },
+      { new: true }
+    );
+
+    if (!application) {
+      return res.status(404).json({ success: false, message: 'Application record context not found.' });
+    }
+
+    // Trigger candidate response email variations based on status type
+    if (status === 'Approved') {
+      await resend.emails.send({
+        from: 'Track2311 Careers <onboarding@resend.dev>',
+        to: [application.email],
+        subject: `🎉 Application Approved: ${application.jobTitle} at Track2311`,
+        html: `
+          <h3>Hello ${application.fullName},</h3>
+          <p>We have carefully reviewed your credentials and background statements for the <strong>${application.jobTitle}</strong> opening.</p>
+          <p>We are absolutely thrilled to inform you that your application has been <strong>Approved</strong>! Our human resources onboarding team will reach out directly within the next 48 hours to schedule your final technical alignment overview.</p>
+          <br>
+          <p>Best regards,</p>
+          <p><strong>Track2311 Recruitment Operations</strong></p>
+        `
+      });
+    } else if (status === 'Rejected') {
+      await resend.emails.send({
+        from: 'Track2311 Careers <onboarding@resend.dev>',
+        to: [application.email],
+        subject: `Update regarding your application at Track2311`,
+        html: `
+          <h3>Hello ${application.fullName},</h3>
+          <p>Thank you so much for taking the time to share your career parameters and asset logs with us for the <strong>${application.jobTitle}</strong> position.</p>
+          <p>While your technical proficiency profile is impressive, we have chosen to proceed with alternative candidate tracking indicators at this current juncture. We will store your background details securely inside our candidate ecosystem layer for matching future development openings.</p>
+          <br>
+          <p>We wish you the absolute best in your professional journeys.</p>
+          <p>Best regards,</p>
+          <p><strong>Track2311 Talent Acquisition Team</strong></p>
+        `
+      });
+    }
+
+    res.status(200).json({ success: true, message: 'Status updated cleanly and notification dispatched.' });
+  } catch (error) {
+    console.error('Error handling admin dashboard status modification:', error);
+    res.status(500).json({ success: false, message: 'Internal server error processing status email pipelines.' });
+  }
+});
+
+// Get all applications
 router.get('/', async (req, res) => {
   try {
     const applications = await Application.find().sort({ createdAt: -1 });
